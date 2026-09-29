@@ -194,12 +194,12 @@
         .btn-outline-teal { color: var(--teal-primary); border-color: var(--teal-primary); }
         .btn-outline-teal:hover, .btn-outline-teal.active { background-color: var(--teal-primary); color: white; }
 
-        /* CALENDAR STYLING PREMIUM */
+        /* CALENDAR STYLING ENHANCED */
         .calendar-day-col {
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
-            min-height: 480px;
+            min-height: 500px;
             display: flex;
             flex-direction: column;
             transition: all 0.2s;
@@ -217,17 +217,18 @@
             font-weight: 700;
             text-align: center;
         }
-        .calendar-task-item {
+        .calendar-event-card {
             background: #f0fdf4;
             border-left: 3px solid var(--teal-primary);
-            padding: 0.5rem;
+            padding: 0.6rem;
             border-radius: 0.35rem;
             margin-bottom: 0.5rem;
             font-size: 0.8rem;
             cursor: pointer;
             transition: transform 0.1s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
-        .calendar-task-item:hover {
+        .calendar-event-card:hover {
             transform: translateY(-1px);
             background: var(--teal-subtle);
         }
@@ -484,7 +485,7 @@
             <div class="row g-3" id="reports-list-container"></div>
         </section>
 
-        <!-- 6. CALENDAR VIEW (RE-DESIGNED PREMIUM & INTERACTIVE) -->
+        <!-- 6. CALENDAR VIEW (NÂNG CẤP HOÀN TOÀN CÓ CHỌN NGÀY & LƯU TRỮ CLOUD ĐỘC LẬP) -->
         <section id="view-calendar" class="view-section d-none">
             <div class="card card-custom p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -492,19 +493,22 @@
                         <h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-calendar-week text-teal me-2"></i>Lịch Công Tác Đoàn Trường</h4>
                         <p class="text-muted small m-0" id="calendar-week-label">Đang xem lịch tuần hiện tại</p>
                     </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left me-1"></i> Tuần Trước</button>
-                        <button class="btn btn-teal btn-sm fw-semibold" onclick="resetCalendarToToday()">Hôm Nay</button>
-                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(1)">Tuần Sau <i class="fa-solid fa-chevron-right ms-1"></i></button>
-                        <button class="btn btn-success btn-sm ms-2" onclick="openTaskModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch Mới</button>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <!-- Bộ chọn ngày nhảy đến lịch mong muốn -->
+                        <div class="input-group input-group-sm" style="width: 170px;">
+                            <span class="input-group-text bg-white text-teal"><i class="fa-solid fa-calendar-days"></i></span>
+                            <input type="date" id="calendar-jump-picker" class="form-control" onchange="jumpToSelectedDate(this.value)" title="Chọn ngày để xem tuần tương ứng">
+                        </div>
+                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="btn btn-teal btn-sm fw-semibold px-3" onclick="resetCalendarToToday()">Hôm nay</button>
+                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                        <button class="btn btn-success btn-sm ms-2" onclick="openCalendarModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch Công Tác</button>
                     </div>
                 </div>
             </div>
 
             <!-- GRID 7 NGÀY CHUYÊN NGHIỆP -->
-            <div class="row g-3" id="weekly-calendar-grid">
-                <!-- Javascript sẽ render các cột Thứ 2 -> Chủ Nhật ở đây -->
-            </div>
+            <div class="row g-3" id="weekly-calendar-grid"></div>
         </section>
 
         <!-- 7. EXPORT VIEW -->
@@ -561,6 +565,53 @@
             </div>
         </section>
     </main>
+
+    <!-- CALENDAR EVENT MODAL (THÊM / SỬA LỊCH CÔNG TÁC ĐỘC LẬP) -->
+    <div class="modal fade" id="calendarModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="calendarModalTitle">Thêm Lịch Công Tác Mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="calendar-event-form">
+                        <input type="hidden" id="cal-event-id">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Nội Dung / Tên Sự Kiện Lịch *</label>
+                            <input type="text" id="cal-event-title" class="form-control" placeholder="Ví dụ: Họp Ban Chấp Hành Đoàn Trường..." required>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Ngày Diễn Ra *</label>
+                                <input type="date" id="cal-event-date" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Thời Gian</label>
+                                <input type="text" id="cal-event-time" class="form-control" placeholder="Ví dụ: 08:00 - 10:30">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Địa Điểm Tổ Chức</label>
+                            <input type="text" id="cal-event-location" class="form-control" placeholder="Ví dụ: Phòng họp hội đồng / Sân trường...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Đoàn Viên / Cán Bộ Phụ Trách</label>
+                            <select id="cal-event-member" class="form-select"></select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ghi Chú Chi Tiết</label>
+                            <textarea id="cal-event-desc" class="form-control" rows="2" placeholder="Thành phần tham gia, tài liệu chuẩn bị..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveCalendarEvent()">Lưu Lịch Công Tác</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- TASK MODAL -->
     <div class="modal fade" id="taskModal" tabindex="-1">
@@ -771,6 +822,9 @@
                     desc: 'Soạn thảo văn bản trình cấp trên.', attachment: '', subtasks: [{ title: 'Dự thảo kịch bản', done: true }, { title: 'Duyệt nội dung', done: false }]
                 }
             ],
+            calendarEvents: [
+                { id: 'cal-101', title: 'Chào cờ đầu tuần & Sinh hoạt dưới cờ', date: new Date().toISOString().split('T')[0], time: '07:00 - 07:45', location: 'Sân trường THPT Nguyễn Văn Chất', desc: 'Toàn trường tham gia', memberId: 'mem-1' }
+            ],
             reports: [
                 { id: 'rep-1', projectId: 'proj-1', rating: 'Tốt', content: 'Công tác chuẩn bị chu đáo, đoàn viên tham gia nhiệt tình, đúng tiến độ đề ra.', date: '2026-03-15' }
             ]
@@ -779,7 +833,7 @@
         let taskViewMode = 'kanban';
         let quickPeriodFilter = 'ALL';
         let chartsInstance = {};
-        let taskModalObj, projectModalObj, memberModalObj, reportModalObj;
+        let taskModalObj, projectModalObj, memberModalObj, reportModalObj, calendarModalObj;
         let calendarStartDate = new Date();
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -787,6 +841,7 @@
             projectModalObj = new bootstrap.Modal(document.getElementById('projectModal'));
             memberModalObj = new bootstrap.Modal(document.getElementById('memberModal'));
             reportModalObj = new bootstrap.Modal(document.getElementById('reportModal'));
+            calendarModalObj = new bootstrap.Modal(document.getElementById('calendarModal'));
             
             document.getElementById('setting-gas-url').value = DEFAULT_GAS_URL;
             syncDataFromCloud(true);
@@ -841,6 +896,7 @@
                     if (data && data.tasks) {
                         AppState = data;
                         if(data.settings) AppState.user = data.settings;
+                        if(!AppState.calendarEvents) AppState.calendarEvents = [];
                     }
                     if(!silent) Swal.close();
                     initAppUI();
@@ -1053,7 +1109,7 @@
         }
 
         // --- CRUD TASKS ---
-        function openTaskModal(taskId = null, defaultDate = '') {
+        function openTaskModal(taskId = null) {
             populateDropdowns();
             document.getElementById('task-form').reset();
             document.getElementById('subtasks-input-container').innerHTML = '';
@@ -1074,9 +1130,6 @@
             } else {
                 document.getElementById('taskModalTitle').textContent = 'Thêm Nhiệm Vụ Hoạt Động';
                 document.getElementById('task-id').value = '';
-                if(defaultDate) {
-                    document.getElementById('task-deadline').value = defaultDate;
-                }
             }
             taskModalObj.show();
         }
@@ -1118,13 +1171,13 @@
                 AppState.tasks.unshift({ id: 'task-' + Date.now(), ...payload });
             }
 
-            saveData(); taskModalObj.hide(); renderTasks(); if(!document.getElementById('view-calendar').classList.contains('d-none')) renderCalendar();
+            saveData(); taskModalObj.hide(); renderTasks();
             Swal.fire({ icon: 'success', title: 'Đã lưu và đồng bộ!', timer: 1000, showConfirmButton: false });
         }
 
         function deleteTask(id) {
             Swal.fire({ title: 'Xóa nhiệm vụ này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => {
-                if (res.isConfirmed) { AppState.tasks = AppState.tasks.filter(t => t.id !== id); saveData(); renderTasks(); if(!document.getElementById('view-calendar').classList.contains('d-none')) renderCalendar(); }
+                if (res.isConfirmed) { AppState.tasks = AppState.tasks.filter(t => t.id !== id); saveData(); renderTasks(); }
             });
         }
 
@@ -1136,6 +1189,165 @@
         function quickComplete(id) {
             const t = AppState.tasks.find(x => x.id === id);
             if (t) { t.status = 'DONE'; saveData(); renderDashboard(); }
+        }
+
+        // --- LỊCH CÔNG TÁC (ĐỘC LẬP, LƯU TRỮ CLOUD & CHỌN NGÀY LINH HOẠT) ---
+        function openCalendarModal(eventId = null, defaultDate = '') {
+            populateDropdowns();
+            document.getElementById('calendar-event-form').reset();
+
+            if (eventId) {
+                const ev = AppState.calendarEvents.find(x => x.id === eventId);
+                if (ev) {
+                    document.getElementById('calendarModalTitle').textContent = 'Chỉnh Sửa Lịch Công Tác';
+                    document.getElementById('cal-event-id').value = ev.id;
+                    document.getElementById('cal-event-title').value = ev.title;
+                    document.getElementById('cal-event-date').value = ev.date;
+                    document.getElementById('cal-event-time').value = ev.time || '';
+                    document.getElementById('cal-event-location').value = ev.location || '';
+                    document.getElementById('cal-event-member').value = ev.memberId || '';
+                    document.getElementById('cal-event-desc').value = ev.desc || '';
+                }
+            } else {
+                document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch Công Tác Mới';
+                document.getElementById('cal-event-id').value = '';
+                if (defaultDate) {
+                    document.getElementById('cal-event-date').value = defaultDate;
+                } else {
+                    document.getElementById('cal-event-date').value = new Date().toISOString().split('T')[0];
+                }
+            }
+            calendarModalObj.show();
+        }
+
+        function saveCalendarEvent() {
+            const id = document.getElementById('cal-event-id').value;
+            const title = document.getElementById('cal-event-title').value.trim();
+            const date = document.getElementById('cal-event-date').value;
+            if (!title || !date) {
+                Swal.fire('Lỗi', 'Vui lòng nhập tên sự kiện và ngày diễn ra', 'error');
+                return;
+            }
+
+            const payload = {
+                title,
+                date,
+                time: document.getElementById('cal-event-time').value.trim(),
+                location: document.getElementById('cal-event-location').value.trim(),
+                memberId: document.getElementById('cal-event-member').value,
+                desc: document.getElementById('cal-event-desc').value.trim()
+            };
+
+            if (id) {
+                const item = AppState.calendarEvents.find(x => x.id === id);
+                if (item) Object.assign(item, payload);
+            } else {
+                AppState.calendarEvents.push({ id: 'cal-' + Date.now(), ...payload });
+            }
+
+            saveData();
+            calendarModalObj.hide();
+            renderCalendar();
+            Swal.fire({ icon: 'success', title: 'Đã lưu lịch công tác!', timer: 1000, showConfirmButton: false });
+        }
+
+        function deleteCalendarEvent(id) {
+            Swal.fire({ title: 'Xóa lịch công tác này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => {
+                if (res.isConfirmed) {
+                    AppState.calendarEvents = AppState.calendarEvents.filter(x => x.id !== id);
+                    saveData();
+                    renderCalendar();
+                }
+            });
+        }
+
+        function changeWeek(direction) {
+            calendarStartDate.setDate(calendarStartDate.getDate() + (direction * 7));
+            renderCalendar();
+        }
+
+        function resetCalendarToToday() {
+            calendarStartDate = new Date();
+            renderCalendar();
+        }
+
+        function jumpToSelectedDate(dateVal) {
+            if (!dateVal) return;
+            calendarStartDate = new Date(dateVal);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('weekly-calendar-grid');
+            grid.innerHTML = '';
+            
+            const curr = new Date(calendarStartDate);
+            const day = curr.getDay();
+            const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
+            const monday = new Date(curr.setDate(diff));
+            
+            const sunday = new Date(monday);
+            sunday.setDate(monday.getDate() + 6);
+            
+            document.getElementById('calendar-week-label').textContent = 
+                `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
+
+            // Sync date picker value with current Monday view
+            document.getElementById('calendar-jump-picker').value = monday.toISOString().split('T')[0];
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
+
+            if(!AppState.calendarEvents) AppState.calendarEvents = [];
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                const dStr = d.toISOString().split('T')[0];
+                const dayEvents = AppState.calendarEvents.filter(e => e.date === dStr);
+                const isToday = dStr === todayStr;
+
+                grid.innerHTML += `
+                    <div class="col-12 col-md">
+                        <div class="calendar-day-col shadow-sm ${isToday ? 'border-teal border-2' : ''}">
+                            <div class="calendar-day-header" style="${isToday ? 'background-color: var(--teal-primary); color: white; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;' : ''}">
+                                <div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div>
+                                <div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
+                            </div>
+                            <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">
+                                ${dayEvents.length > 0 ? dayEvents.map(ev => {
+                                    const m = AppState.members.find(x => x.id === ev.memberId) || {name: 'Chưa phân công'};
+                                    return `
+                                        <div class="calendar-event-card position-relative group">
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time || 'Cả ngày'}</span>
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                    <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;">
+                                                        <li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li>
+                                                        <li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>${ev.location ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>` : ''}
+                                            <div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
+                                        </div>
+                                    `;
+                                }).join('') : `
+                                    <div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;">
+                                        <i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch
+                                    </div>
+                                `}
+                            </div>
+                            <div class="p-2 border-top bg-light text-center">
+                                <button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')">
+                                    <i class="fa-solid fa-plus me-1"></i>Thêm lịch ngày này
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // --- PROJECTS / EVENTS ---
@@ -1317,80 +1529,6 @@
             saveData(); renderReports();
         }
 
-        // --- LỊCH CÔNG TÁC (RE-DESIGNED & FULLY INTERACTIVE) ---
-        function changeWeek(direction) {
-            calendarStartDate.setDate(calendarStartDate.getDate() + (direction * 7));
-            renderCalendar();
-        }
-
-        function resetCalendarToToday() {
-            calendarStartDate = new Date();
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('weekly-calendar-grid');
-            grid.innerHTML = '';
-            
-            const curr = new Date(calendarStartDate);
-            const day = curr.getDay();
-            const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
-            const monday = new Date(curr.setDate(diff));
-            
-            const sunday = new Date(monday);
-            sunday.setDate(monday.getDate() + 6);
-            
-            document.getElementById('calendar-week-label').textContent = 
-                `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
-
-            const todayStr = new Date().toISOString().split('T')[0];
-            const dayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
-
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(monday);
-                d.setDate(monday.getDate() + i);
-                const dStr = d.toISOString().split('T')[0];
-                const dayTasks = AppState.tasks.filter(t => t.deadline === dStr);
-                const isToday = dStr === todayStr;
-
-                grid.innerHTML += `
-                    <div class="col-12 col-md">
-                        <div class="calendar-day-col shadow-sm ${isToday ? 'border-teal border-2' : ''}">
-                            <div class="calendar-day-header ${isToday ? 'bg-teal text-white rounded-top' : ''}" style="${isToday ? 'background-color: var(--teal-primary); color: white;' : ''}">
-                                <div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div>
-                                <div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
-                            </div>
-                            <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 450px; overflow-y: auto;">
-                                ${dayTasks.length > 0 ? dayTasks.map(t => {
-                                    const p = AppState.projects.find(x => x.id === t.projectId) || {name: 'Chương trình'};
-                                    const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công'};
-                                    return `
-                                        <div class="calendar-task-item" onclick="openTaskModal('${t.id}')" title="Bấm để sửa nhiệm vụ">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span class="badge badge-priority-${t.priority}" style="font-size: 9px;">${getPriorityLabel(t.priority)}</span>
-                                                <span class="text-muted" style="font-size: 10px;">${getStatusLabel(t.status)}</span>
-                                            </div>
-                                            <div class="fw-bold text-dark text-truncate mb-1">${t.title}</div>
-                                            <div class="text-muted d-flex align-items-center gap-1" style="font-size: 10px;"><i class="fa-solid fa-user text-teal"></i> ${m.name}</div>
-                                        </div>
-                                    `;
-                                }).join('') : `
-                                    <div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;">
-                                        <i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch
-                                    </div>
-                                `}
-                            </div>
-                            <div class="p-2 border-top bg-light text-center">
-                                <button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openTaskModal(null, '${dStr}')">
-                                    <i class="fa-solid fa-plus me-1"></i>Thêm lịch ngày này
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
         // --- EXPORT WORD DOC ---
         function exportToWordDoc() {
             const u = AppState.user;
@@ -1538,6 +1676,7 @@
             document.getElementById('task-project').innerHTML = projOpts;
             document.getElementById('task-member').innerHTML = memOpts;
             document.getElementById('report-project').innerHTML = projOpts;
+            document.getElementById('cal-event-member').innerHTML = memOpts;
         }
 
         function filterByPeriod(tasks) {
