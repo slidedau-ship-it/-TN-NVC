@@ -232,6 +232,16 @@
             transform: translateY(-1px);
             background: var(--teal-subtle);
         }
+        .calendar-task-card {
+            background: #eff6ff;
+            border-left: 3px solid #3b82f6;
+            padding: 0.6rem;
+            border-radius: 0.35rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
 
         @media (max-width: 991.98px) {
             #app-sidebar { transform: translateX(-100%); }
@@ -485,7 +495,7 @@
             <div class="row g-3" id="reports-list-container"></div>
         </section>
 
-        <!-- 6. CALENDAR VIEW (NÂNG CẤP HOÀN TOÀN CÓ CHỌN NGÀY & LƯU TRỮ CLOUD ĐỘC LẬP) -->
+        <!-- 6. CALENDAR VIEW -->
         <section id="view-calendar" class="view-section d-none">
             <div class="card card-custom p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
@@ -494,7 +504,6 @@
                         <p class="text-muted small m-0" id="calendar-week-label">Đang xem lịch tuần hiện tại</p>
                     </div>
                     <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <!-- Bộ chọn ngày nhảy đến lịch mong muốn -->
                         <div class="input-group input-group-sm" style="width: 170px;">
                             <span class="input-group-text bg-white text-teal"><i class="fa-solid fa-calendar-days"></i></span>
                             <input type="date" id="calendar-jump-picker" class="form-control" onchange="jumpToSelectedDate(this.value)" title="Chọn ngày để xem tuần tương ứng">
@@ -566,7 +575,7 @@
         </section>
     </main>
 
-    <!-- CALENDAR EVENT MODAL (THÊM / SỬA LỊCH CÔNG TÁC ĐỘC LẬP) -->
+    <!-- CALENDAR EVENT MODAL -->
     <div class="modal fade" id="calendarModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0">
@@ -822,9 +831,7 @@
                     desc: 'Soạn thảo văn bản trình cấp trên.', attachment: '', subtasks: [{ title: 'Dự thảo kịch bản', done: true }, { title: 'Duyệt nội dung', done: false }]
                 }
             ],
-            calendarEvents: [
-                { id: 'cal-101', title: 'Chào cờ đầu tuần & Sinh hoạt dưới cờ', date: new Date().toISOString().split('T')[0], time: '07:00 - 07:45', location: 'Sân trường THPT Nguyễn Văn Chất', desc: 'Toàn trường tham gia', memberId: 'mem-1' }
-            ],
+            calendarEvents: [],
             reports: [
                 { id: 'rep-1', projectId: 'proj-1', rating: 'Tốt', content: 'Công tác chuẩn bị chu đáo, đoàn viên tham gia nhiệt tình, đúng tiến độ đề ra.', date: '2026-03-15' }
             ]
@@ -948,7 +955,7 @@
                     <div class="p-2 border rounded-3 bg-light d-flex align-items-center justify-content-between">
                         <div>
                             <div class="fw-bold fs-7">${t.title}</div>
-                            <small class="text-danger d-block">Hạn: ${t.deadline || 'Không'} - ${m.name}</small>
+                            <small class="text-danger d-block">Hạn: ${t.deadline ? t.deadline.split('T')[0] : 'Không'} - ${m.name}</small>
                         </div>
                         <div class="d-flex gap-1">
                             <button class="btn btn-sm btn-outline-primary" onclick="sendRealEmail('${t.id}')" title="Gửi email thực tế"><i class="fa-solid fa-envelope"></i></button>
@@ -1036,6 +1043,7 @@
             const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công', email: ''};
             const subs = t.subtasks || [];
             const doneSubs = subs.filter(s => s.done).length;
+            const deadlineFormatted = t.deadline ? String(t.deadline).split('T')[0] : '';
             return `
                 <div class="kanban-card" draggable="true" ondragstart="event.dataTransfer.setData('taskId', '${t.id}')">
                     <div class="d-flex justify-content-between mb-2">
@@ -1056,7 +1064,7 @@
                     ${t.attachment ? `<div class="mb-2"><a href="${t.attachment}" target="_blank" class="badge bg-light text-dark border text-decoration-none"><i class="fa-solid fa-paperclip me-1"></i>Tài liệu đính kèm</a></div>` : ''}
                     ${subs.length ? `<small class="d-block text-muted mb-2"><i class="fa-solid fa-list-check me-1"></i>Việc con: ${doneSubs}/${subs.length}</small>` : ''}
                     <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                        <small class="${isOverdue(t)?'text-danger fw-bold':'text-muted'}"><i class="fa-solid fa-calendar me-1"></i>${t.deadline || 'Không hạn'}</small>
+                        <small class="${isOverdue(t)?'text-danger fw-bold':'text-muted'}"><i class="fa-solid fa-calendar me-1"></i>${deadlineFormatted || 'Không hạn'}</small>
                         <select class="form-select form-select-sm w-auto py-0 px-2" style="font-size: 11px;" onchange="quickUpdateStatus('${t.id}', this.value)">
                             <option value="TODO" ${t.status==='TODO'?'selected':''}>Cần làm</option>
                             <option value="IN_PROGRESS" ${t.status==='IN_PROGRESS'?'selected':''}>Đang làm</option>
@@ -1092,7 +1100,7 @@
                 action: 'sendEmail',
                 email: m.email,
                 subject: `[ĐOÀN TN THPT NGUYỄN VĂN CHẤT] Đôn đốc thực hiện: ${t.title}`,
-                body: `Chào đồng chí ${m.name},\n\nBan Chấp hành Đoàn Trường THPT Nguyễn Văn Chất gửi email đôn đốc tiến độ:\n- Tên nhiệm vụ: ${t.title}\n- Hạn chót: ${t.deadline || 'Không'}\n- Trạng thái: ${getStatusLabel(t.status)}\n\nĐề nghị đồng chí khẩn trương hoàn thành đúng kế hoạch.\n\nTrân trọng,\n${AppState.user.name} - ${AppState.user.title}`
+                body: `Chào đồng chí ${m.name},\n\nBan Chấp hành Đoàn Trường THPT Nguyễn Văn Chất gửi email đôn đốc tiến độ:\n- Tên nhiệm vụ: ${t.title}\n- Hạn chót: ${t.deadline ? String(t.deadline).split('T')[0] : 'Không'}\n- Trạng thái: ${getStatusLabel(t.status)}\n\nĐề nghị đồng chí khẩn trương hoàn thành đúng kế hoạch.\n\nTrân trọng,\n${AppState.user.name} - ${AppState.user.title}`
             };
 
             fetch(gasUrl, {
@@ -1123,13 +1131,16 @@
                 document.getElementById('task-member').value = t.memberId || '';
                 document.getElementById('task-priority').value = t.priority;
                 document.getElementById('task-status').value = t.status;
-                document.getElementById('task-deadline').value = t.deadline || '';
+                // Chuẩn hóa chuỗi ngày deadline thành YYYY-MM-DD để hiển thị chính xác vào input date
+                document.getElementById('task-deadline').value = t.deadline ? String(t.deadline).split('T')[0] : '';
                 document.getElementById('task-attachment').value = t.attachment || '';
                 document.getElementById('task-desc').value = t.desc || '';
                 (t.subtasks || []).forEach(s => addSubtaskInput(s.title, s.done));
             } else {
                 document.getElementById('taskModalTitle').textContent = 'Thêm Nhiệm Vụ Hoạt Động';
                 document.getElementById('task-id').value = '';
+                // Mặc định điền ngày hôm nay
+                document.getElementById('task-deadline').value = new Date().toISOString().split('T')[0];
             }
             taskModalObj.show();
         }
@@ -1156,13 +1167,18 @@
                 done: row.querySelector('input[type="checkbox"]').checked
             })).filter(s => s.title);
 
+            const deadlineVal = document.getElementById('task-deadline').value;
+
             const payload = {
-                title, projectId: document.getElementById('task-project').value,
+                title, 
+                projectId: document.getElementById('task-project').value,
                 memberId: document.getElementById('task-member').value,
-                priority: document.getElementById('task-priority').value, status: document.getElementById('task-status').value,
-                deadline: document.getElementById('task-deadline').value, 
+                priority: document.getElementById('task-priority').value, 
+                status: document.getElementById('task-status').value,
+                deadline: deadlineVal ? deadlineVal.split('T')[0] : '', 
                 attachment: document.getElementById('task-attachment').value.trim(),
-                desc: document.getElementById('task-desc').value.trim(), subtasks
+                desc: document.getElementById('task-desc').value.trim(), 
+                subtasks
             };
 
             if (id) {
@@ -1191,7 +1207,7 @@
             if (t) { t.status = 'DONE'; saveData(); renderDashboard(); }
         }
 
-        // --- LỊCH CÔNG TÁC (ĐỘC LẬP, LƯU TRỮ CLOUD & CHỌN NGÀY LINH HOẠT) ---
+        // --- LỊCH CÔNG TÁC ---
         function openCalendarModal(eventId = null, defaultDate = '') {
             populateDropdowns();
             document.getElementById('calendar-event-form').reset();
@@ -1202,7 +1218,7 @@
                     document.getElementById('calendarModalTitle').textContent = 'Chỉnh Sửa Lịch Công Tác';
                     document.getElementById('cal-event-id').value = ev.id;
                     document.getElementById('cal-event-title').value = ev.title;
-                    document.getElementById('cal-event-date').value = ev.date;
+                    document.getElementById('cal-event-date').value = ev.date ? String(ev.date).split('T')[0] : '';
                     document.getElementById('cal-event-time').value = ev.time || '';
                     document.getElementById('cal-event-location').value = ev.location || '';
                     document.getElementById('cal-event-member').value = ev.memberId || '';
@@ -1211,11 +1227,7 @@
             } else {
                 document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch Công Tác Mới';
                 document.getElementById('cal-event-id').value = '';
-                if (defaultDate) {
-                    document.getElementById('cal-event-date').value = defaultDate;
-                } else {
-                    document.getElementById('cal-event-date').value = new Date().toISOString().split('T')[0];
-                }
+                document.getElementById('cal-event-date').value = defaultDate ? defaultDate.split('T')[0] : new Date().toISOString().split('T')[0];
             }
             calendarModalObj.show();
         }
@@ -1223,15 +1235,15 @@
         function saveCalendarEvent() {
             const id = document.getElementById('cal-event-id').value;
             const title = document.getElementById('cal-event-title').value.trim();
-            const date = document.getElementById('cal-event-date').value;
-            if (!title || !date) {
+            const dateVal = document.getElementById('cal-event-date').value;
+            if (!title || !dateVal) {
                 Swal.fire('Lỗi', 'Vui lòng nhập tên sự kiện và ngày diễn ra', 'error');
                 return;
             }
 
             const payload = {
                 title,
-                date,
+                date: dateVal ? dateVal.split('T')[0] : '',
                 time: document.getElementById('cal-event-time').value.trim(),
                 location: document.getElementById('cal-event-location').value.trim(),
                 memberId: document.getElementById('cal-event-member').value,
@@ -1292,7 +1304,6 @@
             document.getElementById('calendar-week-label').textContent = 
                 `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
 
-            // Sync date picker value with current Monday view
             document.getElementById('calendar-jump-picker').value = monday.toISOString().split('T')[0];
 
             const todayStr = new Date().toISOString().split('T')[0];
@@ -1304,8 +1315,58 @@
                 const d = new Date(monday);
                 d.setDate(monday.getDate() + i);
                 const dStr = d.toISOString().split('T')[0];
-                const dayEvents = AppState.calendarEvents.filter(e => e.date === dStr);
+                
+                const dayEvents = AppState.calendarEvents.filter(e => e.date && String(e.date).split('T')[0] === dStr);
+                const dayTasks = AppState.tasks.filter(t => t.deadline && String(t.deadline).split('T')[0] === dStr);
+                
                 const isToday = dStr === todayStr;
+
+                let htmlContent = '';
+
+                dayEvents.forEach(ev => {
+                    const m = AppState.members.find(x => x.id === ev.memberId) || {name: 'Chưa phân công'};
+                    htmlContent += `
+                        <div class="calendar-event-card position-relative">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time || 'Cả ngày'}</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;">
+                                        <li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li>
+                                        <li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>
+                            ${ev.location ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>` : ''}
+                            <div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
+                        </div>
+                    `;
+                });
+
+                dayTasks.forEach(t => {
+                    const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công'};
+                    const p = AppState.projects.find(x => x.id === t.projectId) || {name: ''};
+                    htmlContent += `
+                        <div class="calendar-task-card position-relative" onclick="openTaskModal('${t.id}')" title="Bấm để xem/sửa nhiệm vụ">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge badge-priority-${t.priority}" style="font-size: 9px;">${getPriorityLabel(t.priority)}</span>
+                                <span class="text-primary fw-semibold" style="font-size: 9px;"><i class="fa-solid fa-list-check me-1"></i>Deadline NV</span>
+                            </div>
+                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${t.title}</div>
+                            ${p.name ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder me-1"></i>${p.name}</div>` : ''}
+                            <div class="text-primary" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
+                        </div>
+                    `;
+                });
+
+                if (!htmlContent) {
+                    htmlContent = `
+                        <div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;">
+                            <i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch
+                        </div>
+                    `;
+                }
 
                 grid.innerHTML += `
                     <div class="col-12 col-md">
@@ -1315,29 +1376,7 @@
                                 <div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
                             </div>
                             <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">
-                                ${dayEvents.length > 0 ? dayEvents.map(ev => {
-                                    const m = AppState.members.find(x => x.id === ev.memberId) || {name: 'Chưa phân công'};
-                                    return `
-                                        <div class="calendar-event-card position-relative group">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time || 'Cả ngày'}</span>
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                    <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;">
-                                                        <li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li>
-                                                        <li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>${ev.location ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>` : ''}
-                                            <div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
-                                        </div>
-                                    `;
-                                }).join('') : `
-                                    <div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;">
-                                        <i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch
-                                    </div>
-                                `}
+                                ${htmlContent}
                             </div>
                             <div class="p-2 border-top bg-light text-center">
                                 <button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')">
@@ -1578,7 +1617,7 @@
                         <td>${p.name}</td>
                         <td>${m.name} (${m.email})</td>
                         <td style="text-align: center;">${getStatusLabel(t.status)}</td>
-                        <td style="text-align: center;">${t.deadline || ''}</td>
+                        <td style="text-align: center;">${t.deadline ? String(t.deadline).split('T')[0] : ''}</td>
                     </tr>
                 `;
             });
@@ -1623,7 +1662,7 @@
                 'Gmail Phụ Trách': (AppState.members.find(m => m.id === t.memberId) || {}).email || '',
                 'Mức Độ': getPriorityLabel(t.priority),
                 'Trạng Thái': getStatusLabel(t.status),
-                'Deadline': t.deadline || '',
+                'Deadline': t.deadline ? String(t.deadline).split('T')[0] : '',
                 'Tài Liệu Đính Kèm': t.attachment || '',
                 'Ghi Chú': t.desc || ''
             }));
@@ -1702,7 +1741,10 @@
             });
         }
 
-        function isOverdue(t) { return t.deadline && t.status !== 'DONE' && t.deadline < new Date().toISOString().split('T')[0]; }
+        function isOverdue(t) { 
+            if (!t.deadline || t.status === 'DONE') return false;
+            return String(t.deadline).split('T')[0] < new Date().toISOString().split('T')[0]; 
+        }
         function getPriorityLabel(p) { return { Urgent: 'Đặc biệt gấp', High: 'Quan trọng', Medium: 'Thường xuyên', Low: 'Thông tin' }[p] || p; }
         function getStatusLabel(s) { return { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', REVIEW: 'Nghiệm thu', DONE: 'Hoàn thành' }[s] || s; }
         function getStatusBadge(s) {
