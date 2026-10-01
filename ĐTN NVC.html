@@ -10,39 +10,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- CSS Custom Theme Teal -->
+    
+    <!-- CSS Tùy Chỉnh -->
     <style>
         :root {
-            --teal-primary: #0d9488;
-            --teal-primary-hover: #0f766e;
-            --teal-dark: #115e59;
-            --teal-light: #f0fdf4;
-            --teal-subtle: #ccfbf1;
-            --teal-border: #99f6e4;
-            --sidebar-width: 260px;
-            --topbar-height: 70px;
-            --bg-canvas: #f8fafc;
+            --teal-primary: #0d9488; --teal-primary-hover: #0f766e; --teal-dark: #115e59;
+            --teal-light: #f0fdf4; --teal-subtle: #ccfbf1; --teal-border: #99f6e4;
+            --sidebar-width: 260px; --topbar-height: 70px; --bg-canvas: #f8fafc;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-canvas); color: #334155; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-canvas); color: #334155; overflow-x: hidden; margin: 0; }
+        
+        /* --- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ --- */
+        #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0d9488 0%, #0f3836 100%); padding: 20px; z-index: 9999; position: relative; }
+        .auth-card { background: white; border-radius: 1.5rem; box-shadow: 0 15px 35px rgba(0,0,0,0.2); width: 100%; max-width: 420px; overflow: hidden; animation: slideUp 0.5s ease-out; }
+        .auth-header { background: var(--teal-light); padding: 2.5rem 2rem 1.5rem; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .auth-body { padding: 2rem; }
+        .nav-auth { display: flex; gap: 10px; margin-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0; }
+        .nav-auth button { flex: 1; background: none; border: none; padding: 10px; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: 0.3s; }
+        .nav-auth button.active { color: var(--teal-primary); border-bottom-color: var(--teal-primary); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- BỐ CỤC APP CHÍNH --- */
+        #app-wrapper { display: none; opacity: 0; transition: opacity 0.4s ease-in; }
         #app-sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; left: 0; background: linear-gradient(180deg, #0f3836 0%, #0d9488 100%); color: #ffffff; z-index: 1040; transition: all 0.3s ease; box-shadow: 4px 0 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
         #app-topbar { position: fixed; top: 0; right: 0; left: var(--sidebar-width); height: var(--topbar-height); background: #ffffff; border-bottom: 1px solid #e2e8f0; z-index: 1030; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; }
         #app-content { margin-left: var(--sidebar-width); margin-top: var(--topbar-height); padding: 1.75rem; min-height: calc(100vh - var(--topbar-height)); transition: all 0.3s ease; }
+        
         .sidebar-brand { padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .sidebar-brand i { background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 0.5rem; color: #2dd4bf; }
         .sidebar-nav { padding: 1rem 0.75rem; flex-grow: 1; overflow-y: auto; }
         .nav-link-custom { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 1rem; color: rgba(255,255,255,0.8); border-radius: 0.6rem; font-weight: 500; text-decoration: none; transition: all 0.2s ease; margin-bottom: 0.25rem; cursor: pointer; }
         .nav-link-custom:hover, .nav-link-custom.active { color: #ffffff; background: rgba(255,255,255,0.22); font-weight: 600; }
+        
         .save-pill { font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 50rem; background-color: var(--teal-subtle); color: var(--teal-dark); font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
         .card-custom { background: #ffffff; border-radius: 0.85rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .stat-card { padding: 1.25rem; border-radius: 1rem; border: 0; color: #ffffff; position: relative; overflow: hidden; }
         .stat-icon { position: absolute; right: 1rem; bottom: 0.75rem; font-size: 2.75rem; opacity: 0.2; }
+        
+        .btn-teal { background-color: var(--teal-primary); color: white; }
+        .btn-teal:hover { background-color: var(--teal-primary-hover); color: white; }
+        .btn-outline-teal { color: var(--teal-primary); border-color: var(--teal-primary); }
+        .btn-outline-teal:hover, .btn-outline-teal.active { background-color: var(--teal-primary); color: white; }
+
+        /* --- KANBAN & CALENDAR --- */
         .kanban-col { background: #f1f5f9; border-radius: 0.85rem; padding: 1rem; min-height: 550px; border: 1px solid #e2e8f0; }
         .kanban-header { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
-        .kanban-card { background: #ffffff; border-radius: 0.65rem; padding: 1rem; margin-bottom: 0.85rem; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease; }
+        .kanban-card { background: #ffffff; border-radius: 0.65rem; padding: 1rem; margin-bottom: 0.85rem; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease; cursor: grab; }
         .kanban-card:hover { border-color: var(--teal-primary); box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12); }
         .badge-priority-Urgent { background-color: #ef4444; color: white; } .badge-priority-High { background-color: #f97316; color: white; } .badge-priority-Medium { background-color: #3b82f6; color: white; } .badge-priority-Low { background-color: #64748b; color: white; }
-        .btn-teal { background-color: var(--teal-primary); color: white; } .btn-teal:hover { background-color: var(--teal-primary-hover); color: white; } .btn-outline-teal { color: var(--teal-primary); border-color: var(--teal-primary); } .btn-outline-teal:hover, .btn-outline-teal.active { background-color: var(--teal-primary); color: white; }
         
         .calendar-day-col { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; min-height: 500px; display: flex; flex-direction: column; transition: all 0.2s; }
         .calendar-day-col:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: var(--teal-border); }
@@ -56,898 +72,599 @@
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
-    <aside id="app-sidebar">
-        <div class="sidebar-brand">
-            <i class="fa-solid fa-school-flag"></i>
-            <span>ĐTN THPT Nguyễn Văn Chất</span>
-        </div>
-        <div class="sidebar-nav">
-            <a class="nav-link-custom active" onclick="switchView('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Tổng Quan Hoạt Động</span></a>
-            <a class="nav-link-custom" onclick="switchView('tasks')"><i class="fa-solid fa-list-check"></i><span>Nhiệm Vụ & Tiến Độ</span><span class="badge bg-light text-dark rounded-pill" id="badge-total-tasks">0</span></a>
-            <a class="nav-link-custom" onclick="switchView('projects')"><i class="fa-solid fa-calendar-star"></i><span>Chương Trình & Giấy Tờ</span></a>
-            <a class="nav-link-custom" onclick="switchView('members')"><i class="fa-solid fa-users-line"></i><span>Quản Lý Đoàn Viên</span></a>
-            <a class="nav-link-custom" onclick="switchView('reports')"><i class="fa-solid fa-file-lines"></i><span>Báo Cáo & Đánh Giá</span></a>
-            <a class="nav-link-custom" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i><span>Lịch Công Tác</span></a>
-            <hr class="border-secondary my-2">
-            <a class="nav-link-custom" onclick="switchView('export')"><i class="fa-solid fa-file-word text-info"></i><span>Xuất Báo Cáo Word / Excel</span></a>
-            <a class="nav-link-custom" onclick="switchView('settings')"><i class="fa-solid fa-gear"></i><span>Cài Đặt & Google Sheets</span></a>
-        </div>
-    </aside>
-
-    <!-- Topbar Header -->
-    <header id="app-topbar">
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-light d-lg-none border" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-            <h5 class="m-0 fw-bold text-dark" id="page-title">Tổng Quan Hoạt Động</h5>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-sm btn-outline-teal" onclick="syncDataFromCloud()"><i class="fa-solid fa-rotate me-1"></i> Đồng bộ Cloud</button>
-            <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3" id="quick-period-select" style="max-width: 150px;" onchange="onQuickPeriodChange(this.value)">
-                <option value="ALL">Tất cả thời gian</option><option value="WEEK">Tuần này</option><option value="MONTH">Tháng này</option><option value="SEMESTER">Học kỳ này</option>
-            </select>
-            <div class="save-pill" id="save-pill">
-                <i class="fa-solid fa-circle-check"></i><span id="save-status-text">Đã đồng bộ</span>
+    <!-- 1. MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div id="auth-screen">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fa-solid fa-school-flag text-teal fs-1 mb-3" style="color: var(--teal-primary);"></i>
+                <h4 class="fw-bold m-0 text-dark">Hệ Thống Quản Lý</h4>
+                <p class="text-muted small m-0 mt-1">ĐTN THPT Nguyễn Văn Chất</p>
             </div>
-            <div class="d-flex align-items-center gap-2 border-start ps-3 cursor-pointer" onclick="switchView('settings')">
-                <img id="topbar-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" class="rounded-circle border object-fit-cover" width="38" height="38" alt="Avatar">
-                <div class="d-none d-md-block text-start" style="line-height: 1.2;">
-                    <div class="fw-bold text-dark fs-7" id="topbar-unit-name">Bí Thư Đoàn Thanh Niên</div>
-                    <small class="text-muted" style="font-size: 0.725rem;">THPT Nguyễn Văn Chất</small>
+            <div class="auth-body">
+                <div class="nav-auth">
+                    <button class="active" onclick="switchAuthTab('login')" id="tab-login">Đăng Nhập</button>
+                    <button onclick="switchAuthTab('register')" id="tab-register">Đăng Ký</button>
                 </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Application Views -->
-    <main id="app-content">
-
-        <!-- 1. DASHBOARD VIEW -->
-        <section id="view-dashboard" class="view-section">
-            <div class="row g-3 mb-4">
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card bg-primary">
-                        <small class="text-white-50 text-uppercase fw-semibold">Tổng Nhiệm Vụ</small>
-                        <h2 class="fw-bold my-1" id="dash-total">0</h2>
-                        <small class="text-white-50">Hoạt động phong trào</small><i class="fa-solid fa-list-check stat-icon"></i>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card" style="background: #0284c7;">
-                        <small class="text-white-50 text-uppercase fw-semibold">Đang Triển Khai</small>
-                        <h2 class="fw-bold my-1" id="dash-inprogress">0</h2>
-                        <small class="text-white-50">Đang thực hiện</small><i class="fa-solid fa-spinner stat-icon"></i>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card" style="background: #059669;">
-                        <small class="text-white-50 text-uppercase fw-semibold">Đã Hoàn Thành</small>
-                        <h2 class="fw-bold my-1" id="dash-completed">0</h2>
-                        <small class="text-white-50" id="dash-completed-rate">0% hoàn thành</small><i class="fa-solid fa-circle-check stat-icon"></i>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="stat-card" style="background: #dc2626;">
-                        <small class="text-white-50 text-uppercase fw-semibold">Chậm Tiến Độ</small>
-                        <h2 class="fw-bold my-1" id="dash-overdue">0</h2>
-                        <small class="text-white-50">Cần đôn đốc</small><i class="fa-solid fa-triangle-exclamation stat-icon"></i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-12 col-lg-8">
-                    <div class="card card-custom p-3 h-100">
-                        <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-area text-teal me-2"></i>Thống Kê Hoạt Động Theo Chu Kỳ</h6>
-                        <div style="height: 280px; position: relative;"><canvas id="activityChart"></canvas></div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="card card-custom p-3 h-100">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h6 class="fw-bold m-0 text-danger"><i class="fa-solid fa-fire me-2"></i>Nhiệm Vụ Cấp Bách & Gửi Email</h6>
-                            <button class="btn btn-link btn-sm p-0 text-teal text-decoration-none" onclick="switchView('tasks')">Xem tất cả</button>
-                        </div>
-                        <div class="d-flex flex-column gap-2" id="dash-urgent-list"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. TASKS VIEW -->
-        <section id="view-tasks" class="view-section d-none">
-            <div class="card card-custom p-3 mb-4">
-                <div class="row g-2 align-items-center">
-                    <div class="col-12 col-md-3">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-                            <input type="text" id="task-search-input" class="form-control border-start-0" placeholder="Tìm tên nhiệm vụ..." oninput="renderTasks()">
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select id="filter-priority" class="form-select" onchange="renderTasks()">
-                            <option value="ALL">Tất cả mức độ</option><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium">Thường xuyên</option><option value="Low">Thông tin</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <select id="filter-status" class="form-select" onchange="renderTasks()">
-                            <option value="ALL">Tất cả trạng thái</option><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-md-5 text-end d-flex gap-2 justify-content-end">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-teal active" id="btn-view-kanban" onclick="setTaskViewMode('kanban')"><i class="fa-solid fa-square-kanban"></i> Kanban</button>
-                            <button type="button" class="btn btn-outline-teal" id="btn-view-table" onclick="setTaskViewMode('table')"><i class="fa-solid fa-table-list"></i> Danh Sách</button>
-                        </div>
-                        <button class="btn btn-teal text-white fw-semibold" onclick="openTaskModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Nhiệm Vụ</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KANBAN CONTAINER -->
-            <div id="kanban-container" class="row g-3"></div>
-
-            <!-- TABLE CONTAINER -->
-            <div id="table-container" class="card card-custom p-3 d-none">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr><th>Nội Dung Nhiệm Vụ</th><th>Chương Trình</th><th>Người Phụ Trách & Gmail</th><th>Mức Độ</th><th>Trạng Thái & Tiến Độ</th><th>Tài Liệu Đính Kèm</th><th class="text-end">Thao Tác</th></tr>
-                        </thead>
-                        <tbody id="task-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. PROJECTS / EVENTS VIEW -->
-        <section id="view-projects" class="view-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold m-0"><i class="fa-solid fa-calendar-star text-teal me-2"></i>Chương Trình & Giấy Tờ Lưu Trữ</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openProjectModal()"><i class="fa-solid fa-plus me-1"></i> Tạo Chương Trình Mới</button>
-            </div>
-            <div class="row g-3" id="projects-list-container"></div>
-        </section>
-
-        <!-- 4. MEMBERS VIEW -->
-        <section id="view-members" class="view-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold m-0"><i class="fa-solid fa-users-line text-teal me-2"></i>Cơ Sở Dữ Liệu Đoàn Viên</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openMemberModal()"><i class="fa-solid fa-user-plus me-1"></i> Thêm Đoàn Viên</button>
-            </div>
-            <div class="card card-custom p-3">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr><th>Họ và Tên Đoàn Viên</th><th>Chức Vụ / Chi Đoàn</th><th>Số Điện Thoại</th><th>Địa Chỉ Gmail</th><th>Nhiệm Vụ Đang Nhận</th><th class="text-end">Quản Lý</th></tr>
-                        </thead>
-                        <tbody id="members-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. REPORTS VIEW -->
-        <section id="view-reports" class="view-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold m-0"><i class="fa-solid fa-file-lines text-teal me-2"></i>Báo Cáo & Đánh Giá Chương Trình</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openReportModal()"><i class="fa-solid fa-pen-to-square me-1"></i> Viết Đánh Giá Mới</button>
-            </div>
-            <div class="row g-3" id="reports-list-container"></div>
-        </section>
-
-        <!-- 6. CALENDAR VIEW -->
-        <section id="view-calendar" class="view-section d-none">
-            <div class="card card-custom p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                    <div>
-                        <h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-calendar-week text-teal me-2"></i>Lịch Công Tác Đoàn Trường</h4>
-                        <p class="text-muted small m-0" id="calendar-week-label">Đang xem lịch tuần hiện tại</p>
-                    </div>
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
-                        <div class="input-group input-group-sm" style="width: 170px;">
-                            <span class="input-group-text bg-white text-teal"><i class="fa-solid fa-calendar-days"></i></span>
-                            <input type="date" id="calendar-jump-picker" class="form-control" onchange="jumpToSelectedDate(this.value)" title="Chọn ngày để xem tuần tương ứng">
-                        </div>
-                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="btn btn-teal btn-sm fw-semibold px-3" onclick="resetCalendarToToday()">Hôm nay</button>
-                        <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                        <button class="btn btn-success btn-sm ms-2" onclick="openCalendarModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch</button>
-                    </div>
-                </div>
-            </div>
-            <!-- GRID 7 NGÀY CHUYÊN NGHIỆP -->
-            <div class="row g-3" id="weekly-calendar-grid"></div>
-        </section>
-
-        <!-- 7. EXPORT VIEW -->
-        <section id="view-export" class="view-section d-none">
-            <div class="row g-4 justify-content-center">
-                <div class="col-12 col-md-6">
-                    <div class="card card-custom p-4 text-center h-100 border-primary">
-                        <i class="fa-solid fa-file-word text-primary display-3 mb-3"></i>
-                        <h5 class="fw-bold">Xuất Báo Cáo Chuẩn Word (.doc)</h5>
-                        <p class="text-muted small">Tạo file báo cáo hành chính đầy đủ quốc hiệu, tiêu ngữ, danh sách phân công đoàn viên và bảng đánh giá.</p>
-                        <button class="btn btn-primary mt-auto fw-semibold" onclick="exportToWordDoc()"><i class="fa-solid fa-download me-1"></i> Tải Xuống File Word</button>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <div class="card card-custom p-4 text-center h-100 border-success">
-                        <i class="fa-solid fa-file-excel text-success display-3 mb-3"></i>
-                        <h5 class="fw-bold">Xuất Bảng Thống Kê Excel (.xlsx)</h5>
-                        <p class="text-muted small">Xuất danh sách nhiệm vụ và thông tin đoàn viên phụ trách ra file Excel tổng hợp.</p>
-                        <button class="btn btn-success mt-auto fw-semibold" onclick="exportToExcel()"><i class="fa-solid fa-download me-1"></i> Tải Xuống File Excel</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. SETTINGS VIEW -->
-        <section id="view-settings" class="view-section d-none">
-            <div class="card card-custom p-4 mx-auto" style="max-width: 650px;">
-                <h5 class="fw-bold mb-3"><i class="fa-solid fa-cloud-arrow-up me-2 text-teal"></i>Cài Đặt Google Sheets & Đơn Vị</h5>
-                <form id="settings-form" onsubmit="saveUserSettings(event)">
+                <!-- Form Đăng Nhập -->
+                <form id="form-login" onsubmit="handleLogin(event)">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold text-teal">Google Apps Script Web App URL (Kết nối Sheets)</label>
-                        <input type="text" id="setting-gas-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec" required>
-                        <small class="text-muted">Đường dẫn Web App đã được cấu hình tự động sẵn sàng kết nối.</small>
+                        <label class="form-label fw-semibold small">Tên đăng nhập</label>
+                        <input type="text" id="login-username" class="form-control bg-light" required>
                     </div>
-                    <hr class="my-4">
-                    <div class="mb-3 text-center">
-                        <img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" class="rounded-circle border mb-2 object-fit-cover" width="90" height="90">
-                        <div>
-                            <label class="btn btn-sm btn-outline-teal cursor-pointer">
-                                Tải Ảnh Đại Diện Từ Máy <input type="file" id="avatar-file-input" accept="image/*" hidden onchange="handleAvatarUpload(event)">
-                            </label>
-                        </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small">Mật khẩu</label>
+                        <input type="password" id="login-password" class="form-control bg-light" required>
+                    </div>
+                    <button type="submit" class="btn btn-teal w-100 fw-bold py-2" id="btn-login">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Đăng Nhập
+                    </button>
+                </form>
+                <!-- Form Đăng Ký -->
+                <form id="form-register" onsubmit="handleRegister(event)" class="d-none">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Họ và Tên cán bộ</label>
+                        <input type="text" id="reg-fullname" class="form-control bg-light" placeholder="VD: Nguyễn Quang Duy" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Họ và Tên Cán Bộ Đoàn</label>
-                        <input type="text" id="setting-user-name" class="form-control" required>
+                        <label class="form-label fw-semibold small">Tên đăng nhập (viết liền không dấu)</label>
+                        <input type="text" id="reg-username" class="form-control bg-light" placeholder="VD: admin_duy" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Chức Vụ & Đơn Vị</label>
-                        <input type="text" id="setting-user-title" class="form-control" required>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small">Mật khẩu</label>
+                        <input type="password" id="reg-password" class="form-control bg-light" required>
                     </div>
-                    <button type="submit" class="btn btn-teal text-white w-100 fw-semibold">Lưu Cài Đặt & Đồng Bộ Lên Cloud</button>
+                    <button type="submit" class="btn btn-teal w-100 fw-bold py-2" id="btn-register">
+                        <i class="fa-solid fa-user-plus me-2"></i> Tạo Tài Khoản Mới
+                    </button>
                 </form>
             </div>
-        </section>
-    </main>
-
-    <!-- CALENDAR EVENT MODAL -->
-    <div class="modal fade" id="calendarModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="calendarModalTitle">Thêm Lịch Công Tác Mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="calendar-event-form">
-                        <input type="hidden" id="cal-event-id">
-                        <div class="mb-3"><label class="form-label fw-semibold">Nội Dung / Tên Sự Kiện Lịch *</label><input type="text" id="cal-event-title" class="form-control" placeholder="Ví dụ: Họp Ban Chấp Hành Đoàn Trường..." required></div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6"><label class="form-label fw-semibold">Ngày Diễn Ra *</label><input type="date" id="cal-event-date" class="form-control" required></div>
-                            <div class="col-md-6"><label class="form-label fw-semibold">Thời Gian</label><input type="text" id="cal-event-time" class="form-control" placeholder="Ví dụ: 08:00 - 10:30"></div>
-                        </div>
-                        <div class="mb-3"><label class="form-label fw-semibold">Địa Điểm Tổ Chức</label><input type="text" id="cal-event-location" class="form-control" placeholder="Ví dụ: Phòng họp hội đồng / Sân trường..."></div>
-                        <div class="mb-3"><label class="form-label fw-semibold">Đoàn Viên / Cán Bộ Phụ Trách</label><select id="cal-event-member" class="form-select"></select></div>
-                        <div class="mb-3"><label class="form-label fw-semibold">Ghi Chú Chi Tiết</label><textarea id="cal-event-desc" class="form-control" rows="2" placeholder="Thành phần tham gia, tài liệu chuẩn bị..."></textarea></div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveCalendarEvent()">Lưu Lịch Công Tác</button>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- TASK MODAL -->
-    <div class="modal fade" id="taskModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="taskModalTitle">Thêm Nhiệm Vụ Hoạt Động</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="task-form">
-                        <input type="hidden" id="task-id">
-                        <div class="mb-3"><label class="form-label fw-semibold">Tên Nhiệm Vụ / Công Việc *</label><input type="text" id="task-title" class="form-control" placeholder="Ví dụ: Lập kế hoạch hội trại..." required></div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6"><label class="form-label fw-semibold">Chương Trình Liên Kết *</label><select id="task-project" class="form-select" required></select></div>
-                            <div class="col-md-6"><label class="form-label fw-semibold">Người Phụ Trách (Từ CSDL Đoàn Viên) *</label><select id="task-member" class="form-select" required></select></div>
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Mức Độ Ưu Tiên *</label>
-                                <select id="task-priority" class="form-select" required><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium" selected>Thường xuyên</option><option value="Low">Thông tin</option></select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Trạng Thái (Tiến Độ) *</label>
-                                <select id="task-status" class="form-select" required><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option></select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Hạn Chót (Deadline)</label>
-                                <input type="date" id="task-deadline" class="form-control">
-                            </div>
-                        </div>
-                        <div class="mb-3"><label class="form-label fw-semibold">Tài liệu đính kèm (Link Drive/File)</label><input type="text" id="task-attachment" class="form-control" placeholder="Dán link Google Drive hoặc URL tài liệu..."></div>
-                        <div class="mb-3"><label class="form-label fw-semibold">Ghi Chú Chi Tiết</label><textarea id="task-desc" class="form-control" rows="2" placeholder="Yêu cầu cụ thể..."></textarea></div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold d-flex justify-content-between align-items-center"><span>Hạng Mục Việc Con (Checklist)</span><button type="button" class="btn btn-sm btn-outline-teal" onclick="addSubtaskInput()"><i class="fa-solid fa-plus me-1"></i> Thêm mục</button></label>
-                            <div id="subtasks-input-container" class="d-flex flex-column gap-2"></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveTask()">Lưu Nhiệm Vụ</button>
+    <!-- 2. KHUNG ỨNG DỤNG CHÍNH -->
+    <div id="app-wrapper">
+        <!-- Sidebar -->
+        <aside id="app-sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-school-flag"></i><span>ĐTN THPT Nguyễn Văn Chất</span>
+            </div>
+            <div class="sidebar-nav">
+                <a class="nav-link-custom active" onclick="switchView('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Tổng Quan Hoạt Động</span></a>
+                <a class="nav-link-custom" onclick="switchView('tasks')"><i class="fa-solid fa-list-check"></i><span>Nhiệm Vụ & Tiến Độ</span><span class="badge bg-light text-dark rounded-pill ms-auto" id="badge-total-tasks">0</span></a>
+                <a class="nav-link-custom" onclick="switchView('projects')"><i class="fa-solid fa-calendar-star"></i><span>Chương Trình & Giấy Tờ</span></a>
+                <a class="nav-link-custom" onclick="switchView('members')"><i class="fa-solid fa-users-line"></i><span>Quản Lý Đoàn Viên</span></a>
+                <a class="nav-link-custom" onclick="switchView('reports')"><i class="fa-solid fa-file-lines"></i><span>Báo Cáo & Đánh Giá</span></a>
+                <a class="nav-link-custom" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i><span>Lịch Công Tác</span></a>
+                <hr class="border-secondary my-2">
+                <a class="nav-link-custom" onclick="switchView('export')"><i class="fa-solid fa-file-word text-info"></i><span>Xuất Báo Cáo File</span></a>
+                <a class="nav-link-custom" onclick="switchView('settings')"><i class="fa-solid fa-gear"></i><span>Cài Đặt Đơn Vị</span></a>
+                <a class="nav-link-custom text-danger mt-3" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i><span>Đăng Xuất</span></a>
+            </div>
+        </aside>
+
+        <!-- Topbar -->
+        <header id="app-topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-light d-lg-none border" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                <h5 class="m-0 fw-bold text-dark" id="page-title">Tổng Quan Hoạt Động</h5>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <button class="btn btn-sm btn-outline-teal" onclick="syncDataFromCloud()"><i class="fa-solid fa-rotate me-1"></i> Làm mới</button>
+                <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3" id="quick-period-select" style="max-width: 150px;" onchange="onQuickPeriodChange(this.value)">
+                    <option value="ALL">Tất cả thời gian</option><option value="WEEK">Tuần này</option><option value="MONTH">Tháng này</option><option value="SEMESTER">Học kỳ này</option>
+                </select>
+                <div class="save-pill" id="save-pill"><i class="fa-solid fa-circle-check"></i><span id="save-status-text">Đã đồng bộ</span></div>
+                <div class="d-flex align-items-center gap-2 border-start ps-3 cursor-pointer" onclick="switchView('settings')">
+                    <img id="topbar-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" class="rounded-circle border object-fit-cover" width="38" height="38" alt="Avatar">
+                    <div class="d-none d-md-block text-start" style="line-height: 1.2;">
+                        <div class="fw-bold text-dark fs-7" id="topbar-unit-name">Cán Bộ Đoàn</div>
+                        <small class="text-teal fw-semibold" id="topbar-username">@admin</small>
+                    </div>
                 </div>
             </div>
-        </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="app-content">
+            <!-- 1. DASHBOARD -->
+            <section id="view-dashboard" class="view-section">
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-xl-3"><div class="stat-card bg-primary"><small class="text-white-50 text-uppercase fw-semibold">Tổng Nhiệm Vụ</small><h2 class="fw-bold my-1" id="dash-total">0</h2><small class="text-white-50">Hoạt động phong trào</small><i class="fa-solid fa-list-check stat-icon"></i></div></div>
+                    <div class="col-12 col-sm-6 col-xl-3"><div class="stat-card" style="background: #0284c7;"><small class="text-white-50 text-uppercase fw-semibold">Đang Triển Khai</small><h2 class="fw-bold my-1" id="dash-inprogress">0</h2><small class="text-white-50">Đang thực hiện</small><i class="fa-solid fa-spinner stat-icon"></i></div></div>
+                    <div class="col-12 col-sm-6 col-xl-3"><div class="stat-card" style="background: #059669;"><small class="text-white-50 text-uppercase fw-semibold">Đã Hoàn Thành</small><h2 class="fw-bold my-1" id="dash-completed">0</h2><small class="text-white-50" id="dash-completed-rate">0% hoàn thành</small><i class="fa-solid fa-circle-check stat-icon"></i></div></div>
+                    <div class="col-12 col-sm-6 col-xl-3"><div class="stat-card" style="background: #dc2626;"><small class="text-white-50 text-uppercase fw-semibold">Chậm Tiến Độ</small><h2 class="fw-bold my-1" id="dash-overdue">0</h2><small class="text-white-50">Cần đôn đốc</small><i class="fa-solid fa-triangle-exclamation stat-icon"></i></div></div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-12 col-lg-8"><div class="card card-custom p-3 h-100"><h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-area text-teal me-2"></i>Thống Kê Hoạt Động Theo Chương Trình</h6><div style="height: 280px; position: relative;"><canvas id="activityChart"></canvas></div></div></div>
+                    <div class="col-12 col-lg-4"><div class="card card-custom p-3 h-100"><div class="d-flex justify-content-between mb-3"><h6 class="fw-bold m-0 text-danger"><i class="fa-solid fa-fire me-2"></i>Việc Gấp & Đôn Đốc</h6><button class="btn btn-link btn-sm p-0 text-teal" onclick="switchView('tasks')">Xem tất cả</button></div><div class="d-flex flex-column gap-2" id="dash-urgent-list"></div></div></div>
+                </div>
+            </section>
+
+            <!-- 2. TASKS -->
+            <section id="view-tasks" class="view-section d-none">
+                <div class="card card-custom p-3 mb-4">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-12 col-md-3"><div class="input-group"><span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span><input type="text" id="task-search-input" class="form-control border-start-0" placeholder="Tìm tên nhiệm vụ..." oninput="renderTasks()"></div></div>
+                        <div class="col-6 col-md-2"><select id="filter-priority" class="form-select" onchange="renderTasks()"><option value="ALL">Tất cả mức độ</option><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium">Thường xuyên</option><option value="Low">Thông tin</option></select></div>
+                        <div class="col-6 col-md-2"><select id="filter-status" class="form-select" onchange="renderTasks()"><option value="ALL">Tất cả trạng thái</option><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option></select></div>
+                        <div class="col-12 col-md-5 text-end d-flex gap-2 justify-content-end">
+                            <div class="btn-group" role="group"><button type="button" class="btn btn-outline-teal active" id="btn-view-kanban" onclick="setTaskViewMode('kanban')"><i class="fa-solid fa-square-kanban"></i> Kanban</button><button type="button" class="btn btn-outline-teal" id="btn-view-table" onclick="setTaskViewMode('table')"><i class="fa-solid fa-table-list"></i> Danh Sách</button></div>
+                            <button class="btn btn-teal fw-semibold" onclick="openTaskModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Nhiệm Vụ</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="kanban-container" class="row g-3"></div>
+                <div id="table-container" class="card card-custom p-3 d-none">
+                    <div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>Nội Dung Nhiệm Vụ</th><th>Chương Trình</th><th>Người Phụ Trách & Gmail</th><th>Mức Độ</th><th>Trạng Thái</th><th>Đính Kèm</th><th class="text-end">Thao Tác</th></tr></thead><tbody id="task-table-body"></tbody></table></div>
+                </div>
+            </section>
+
+            <!-- 3. PROJECTS -->
+            <section id="view-projects" class="view-section d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="fw-bold m-0"><i class="fa-solid fa-calendar-star text-teal me-2"></i>Chương Trình & Giấy Tờ Lưu Trữ</h5><button class="btn btn-teal fw-semibold" onclick="openProjectModal()"><i class="fa-solid fa-plus me-1"></i> Tạo Chương Trình Mới</button></div>
+                <div class="row g-3" id="projects-list-container"></div>
+            </section>
+
+            <!-- 4. MEMBERS -->
+            <section id="view-members" class="view-section d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="fw-bold m-0"><i class="fa-solid fa-users-line text-teal me-2"></i>Cơ Sở Dữ Liệu Đoàn Viên</h5><button class="btn btn-teal fw-semibold" onclick="openMemberModal()"><i class="fa-solid fa-user-plus me-1"></i> Thêm Đoàn Viên</button></div>
+                <div class="card card-custom p-3"><div class="table-responsive"><table class="table table-hover align-middle mb-0"><thead class="table-light"><tr><th>Họ và Tên</th><th>Chức Vụ / Chi Đoàn</th><th>Số Điện Thoại</th><th>Địa Chỉ Gmail</th><th>Nhiệm Vụ Đang Nhận</th><th class="text-end">Quản Lý</th></tr></thead><tbody id="members-table-body"></tbody></table></div></div>
+            </section>
+
+            <!-- 5. REPORTS -->
+            <section id="view-reports" class="view-section d-none">
+                <div class="d-flex justify-content-between align-items-center mb-4"><h5 class="fw-bold m-0"><i class="fa-solid fa-file-lines text-teal me-2"></i>Báo Cáo & Đánh Giá Chương Trình</h5><button class="btn btn-teal fw-semibold" onclick="openReportModal()"><i class="fa-solid fa-pen-to-square me-1"></i> Viết Đánh Giá Mới</button></div>
+                <div class="row g-3" id="reports-list-container"></div>
+            </section>
+
+            <!-- 6. CALENDAR -->
+            <section id="view-calendar" class="view-section d-none">
+                <div class="card card-custom p-4 mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div><h4 class="fw-bold m-0 text-dark"><i class="fa-solid fa-calendar-week text-teal me-2"></i>Lịch Công Tác Đoàn Trường</h4><p class="text-muted small m-0" id="calendar-week-label">Đang xem lịch tuần hiện tại</p></div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <div class="input-group input-group-sm" style="width: 170px;"><span class="input-group-text bg-white text-teal"><i class="fa-solid fa-calendar-days"></i></span><input type="date" id="calendar-jump-picker" class="form-control" onchange="jumpToSelectedDate(this.value)"></div>
+                            <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button class="btn btn-teal btn-sm fw-semibold px-3" onclick="resetCalendarToToday()">Hôm nay</button>
+                            <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                            <button class="btn btn-success btn-sm ms-2" onclick="openCalendarModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3" id="weekly-calendar-grid"></div>
+            </section>
+
+            <!-- 7. EXPORT -->
+            <section id="view-export" class="view-section d-none">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-12 col-md-6"><div class="card card-custom p-4 text-center h-100 border-primary"><i class="fa-solid fa-file-word text-primary display-3 mb-3"></i><h5 class="fw-bold">Xuất Báo Cáo Chuẩn Word (.doc)</h5><p class="text-muted small">Tạo file báo cáo hành chính đầy đủ quốc hiệu, tiêu ngữ, danh sách phân công và bảng đánh giá.</p><button class="btn btn-primary mt-auto fw-semibold" onclick="exportToWordDoc()"><i class="fa-solid fa-download me-1"></i> Tải File Word</button></div></div>
+                    <div class="col-12 col-md-6"><div class="card card-custom p-4 text-center h-100 border-success"><i class="fa-solid fa-file-excel text-success display-3 mb-3"></i><h5 class="fw-bold">Xuất Thống Kê Excel (.xlsx)</h5><p class="text-muted small">Xuất danh sách nhiệm vụ và thông tin đoàn viên phụ trách ra bảng tính.</p><button class="btn btn-success mt-auto fw-semibold" onclick="exportToExcel()"><i class="fa-solid fa-download me-1"></i> Tải File Excel</button></div></div>
+                </div>
+            </section>
+
+            <!-- 8. SETTINGS -->
+            <section id="view-settings" class="view-section d-none">
+                <div class="card card-custom p-4 mx-auto" style="max-width: 650px;">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-cloud-arrow-up me-2 text-teal"></i>Cấu Hình Hệ Thống & Cán Bộ</h5>
+                    <form id="settings-form" onsubmit="saveUserSettings(event)">
+                        <div class="mb-3"><label class="form-label fw-semibold text-teal">Link Google Apps Script (GAS_URL)</label><input type="text" id="setting-gas-url" class="form-control" disabled readonly><small class="text-muted d-block mt-1">Đường dẫn Web App đã được nhúng cố định trong mã nguồn để đảm bảo an toàn.</small></div>
+                        <hr class="my-4">
+                        <div class="mb-3 text-center"><img id="settings-avatar-preview" src="https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" class="rounded-circle border mb-2 object-fit-cover" width="90" height="90"><div><label class="btn btn-sm btn-outline-teal cursor-pointer">Tải Ảnh Đại Diện Mới <input type="file" id="avatar-file-input" accept="image/*" hidden onchange="handleAvatarUpload(event)"></label></div></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Họ và Tên Cán Bộ Đoàn (Hiển thị Báo cáo)</label><input type="text" id="setting-user-name" class="form-control" required></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Chức Vụ & Đơn Vị</label><input type="text" id="setting-user-title" class="form-control" required></div>
+                        <button type="submit" class="btn btn-teal text-white w-100 fw-semibold">Lưu Cài Đặt & Đồng Bộ</button>
+                    </form>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <!-- PROJECT MODAL -->
-    <div class="modal fade" id="projectModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="projectModalTitle">Tạo Chương Trình Mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="project-form"><input type="hidden" id="project-id"><div class="mb-3"><label class="form-label fw-semibold">Tên Chương Trình / Sự Kiện *</label><input type="text" id="project-name" class="form-control" required></div><div class="mb-3"><label class="form-label fw-semibold">Giấy Tờ Kế Hoạch (Link Drive)</label><input type="text" id="project-attachment" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Màu Đánh Dấu</label><input type="color" id="project-color" class="form-control form-control-color w-100" value="#0d9488"></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveProject()">Lưu Chương Trình</button></div></div></div>
-    </div>
+    <!-- CÁC MODAL (POPUP NHẬP LIỆU) -->
+    <!-- Task Modal -->
+    <div class="modal fade" id="taskModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="taskModalTitle">Thêm Nhiệm Vụ</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="task-form"><input type="hidden" id="task-id"><div class="mb-3"><label class="fw-semibold">Tên Nhiệm Vụ *</label><input type="text" id="task-title" class="form-control" required></div><div class="row g-3 mb-3"><div class="col-md-6"><label class="fw-semibold">Chương Trình *</label><select id="task-project" class="form-select" required></select></div><div class="col-md-6"><label class="fw-semibold">Người Phụ Trách *</label><select id="task-member" class="form-select" required></select></div></div><div class="row g-3 mb-3"><div class="col-md-4"><label class="fw-semibold">Mức Độ Ưu Tiên</label><select id="task-priority" class="form-select"><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium" selected>Thường xuyên</option><option value="Low">Thông tin</option></select></div><div class="col-md-4"><label class="fw-semibold">Trạng Thái</label><select id="task-status" class="form-select"><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option></select></div><div class="col-md-4"><label class="fw-semibold">Hạn Chót</label><input type="date" id="task-deadline" class="form-control"></div></div><div class="mb-3"><label class="fw-semibold">Tài liệu đính kèm (Link)</label><input type="text" id="task-attachment" class="form-control" placeholder="URL Google Drive, Docs..."></div><div class="mb-3"><label class="fw-semibold">Ghi Chú</label><textarea id="task-desc" class="form-control" rows="2"></textarea></div><div class="mb-3"><label class="fw-semibold d-flex justify-content-between"><span>Checklist Việc Con</span><button type="button" class="btn btn-sm btn-outline-teal" onclick="addSubtaskInput()"><i class="fa-solid fa-plus"></i> Thêm</button></label><div id="subtasks-input-container" class="d-flex flex-column gap-2"></div></div></form></div><div class="modal-footer border-0 pt-0"><button class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-teal fw-semibold" onclick="saveTask()">Lưu Nhiệm Vụ</button></div></div></div></div>
+    <!-- Project Modal -->
+    <div class="modal fade" id="projectModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="projectModalTitle">Chương Trình</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="project-form"><input type="hidden" id="project-id"><div class="mb-3"><label class="fw-semibold">Tên Chương Trình *</label><input type="text" id="project-name" class="form-control" required></div><div class="mb-3"><label class="fw-semibold">Giấy Tờ (Link)</label><input type="text" id="project-attachment" class="form-control"></div><div class="mb-3"><label class="fw-semibold">Màu Đánh Dấu</label><input type="color" id="project-color" class="form-control form-control-color w-100" value="#0d9488"></div></form></div><div class="modal-footer border-0"><button class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-teal fw-semibold" onclick="saveProject()">Lưu Chương Trình</button></div></div></div></div>
+    <!-- Member Modal -->
+    <div class="modal fade" id="memberModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="memberModalTitle">Đoàn Viên</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="member-form"><input type="hidden" id="member-id"><div class="mb-3"><label class="fw-semibold">Họ Tên *</label><input type="text" id="member-name" class="form-control" required></div><div class="mb-3"><label class="fw-semibold">Chức Vụ</label><input type="text" id="member-role" class="form-control"></div><div class="mb-3"><label class="fw-semibold">SĐT</label><input type="text" id="member-phone" class="form-control"></div><div class="mb-3"><label class="fw-semibold">Gmail *</label><input type="email" id="member-email" class="form-control" required></div></form></div><div class="modal-footer border-0"><button class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-teal fw-semibold" onclick="saveMember()">Lưu Đoàn Viên</button></div></div></div></div>
+    <!-- Report Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Báo Cáo Nhận Xét</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="report-form"><input type="hidden" id="report-id"><div class="mb-3"><label class="fw-semibold">Chương Trình *</label><select id="report-project" class="form-select" required></select></div><div class="mb-3"><label class="fw-semibold">Xếp Loại</label><select id="report-rating" class="form-select"><option>Xuất sắc</option><option selected>Tốt</option><option>Khá</option><option>Cần rút kinh nghiệm</option></select></div><div class="mb-3"><label class="fw-semibold">Nhận Xét *</label><textarea id="report-content" class="form-control" rows="4" required></textarea></div></form></div><div class="modal-footer border-0"><button class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-teal fw-semibold" onclick="saveReport()">Lưu Báo Cáo</button></div></div></div></div>
+    <!-- Calendar Modal -->
+    <div class="modal fade" id="calendarModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold" id="calendarModalTitle">Lịch Công Tác</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="calendar-event-form"><input type="hidden" id="cal-event-id"><div class="mb-3"><label class="fw-semibold">Tên Sự Kiện *</label><input type="text" id="cal-event-title" class="form-control" required></div><div class="row g-3 mb-3"><div class="col-6"><label class="fw-semibold">Ngày *</label><input type="date" id="cal-event-date" class="form-control" required></div><div class="col-6"><label class="fw-semibold">Giờ</label><input type="text" id="cal-event-time" class="form-control" placeholder="08:00 - 10:30"></div></div><div class="mb-3"><label class="fw-semibold">Địa Điểm</label><input type="text" id="cal-event-location" class="form-control"></div><div class="mb-3"><label class="fw-semibold">Phụ Trách</label><select id="cal-event-member" class="form-select"></select></div><div class="mb-3"><label class="fw-semibold">Ghi Chú</label><textarea id="cal-event-desc" class="form-control" rows="2"></textarea></div></form></div><div class="modal-footer border-0 pt-0"><button class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button class="btn btn-teal fw-semibold" onclick="saveCalendarEvent()">Lưu Lịch</button></div></div></div></div>
 
-    <!-- MEMBER MODAL -->
-    <div class="modal fade" id="memberModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="memberModalTitle">Thêm Đoàn Viên</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="member-form"><input type="hidden" id="member-id"><div class="mb-3"><label class="form-label fw-semibold">Họ và Tên Đoàn Viên *</label><input type="text" id="member-name" class="form-control" required></div><div class="mb-3"><label class="form-label fw-semibold">Chức Vụ / Chi Đoàn</label><input type="text" id="member-role" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Số Điện Thoại</label><input type="text" id="member-phone" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Địa Chỉ Gmail *</label><input type="email" id="member-email" class="form-control" required></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveMember()">Lưu Đoàn Viên</button></div></div></div>
-    </div>
-
-    <!-- REPORT MODAL -->
-    <div class="modal fade" id="reportModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Đánh Giá Chương Trình</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="report-form"><input type="hidden" id="report-id"><div class="mb-3"><label class="form-label fw-semibold">Chọn Chương Trình *</label><select id="report-project" class="form-select" required></select></div><div class="mb-3"><label class="form-label fw-semibold">Đánh Giá *</label><select id="report-rating" class="form-select" required><option value="Xuất sắc">Xuất sắc</option><option value="Tốt" selected>Tốt</option><option value="Khá">Khá</option><option value="Cần rút kinh nghiệm">Cần rút kinh nghiệm</option></select></div><div class="mb-3"><label class="form-label fw-semibold">Nhận Xét *</label><textarea id="report-content" class="form-control" rows="4" required></textarea></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveReport()">Lưu Báo Cáo</button></div></div></div>
-    </div>
-
-    <!-- JAVASCRIPT -->
+    <!-- SCRIPTS THƯ VIỆN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
-        const DEFAULT_GAS_URL = localStorage.getItem('TealYouth_GAS_URL') || '';
+        // =====================================================================
+        // CHỈ CẦN DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO DÒNG DƯỚI ĐÂY
+        // =====================================================================
+        const MASTER_GAS_URL = 'https://script.google.com/macros/s/AKfycbzYUuQ2tlvPswdmdih6Yi9TVjrv2SEEgdeMLK8TUSG0BIej_FLsHuBlFXJzVjP-zboVkQ/exec';
+        // =====================================================================
 
-        // TẠO TRẠNG THÁI KHỞI TẠO RỖNG ĐỂ KHÔNG BỊ RÁC GHI ĐÈ LÊN CLOUD
-        let AppState = {
-            user: { name: "Nguyễn Quang Duy", title: "Bí Thư Đoàn Thanh Niên", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" },
-            projects: [], members: [], tasks: [], calendarEvents: [], reports: []
-        };
-
-        // BƯỚC CỨU CÁNH: LUÔN KHÔI PHỤC DỮ LIỆU TỪ TRÌNH DUYỆT NGAY LẬP TỨC ĐỂ KHÔNG BỊ TRỐNG
-        const savedLocal = localStorage.getItem('TealYouth_Local_Backup');
-        if (savedLocal) {
-            try { 
-                const parsed = JSON.parse(savedLocal);
-                if (parsed && parsed.tasks) AppState = parsed;
-            } catch(e) {}
-        }
-
+        // KHỞI TẠO BIẾN
+        let AppState = { user: { name: "", title: "", avatar: "" }, projects: [], members: [], tasks: [], calendarEvents: [], reports: [] };
+        let activeSession = JSON.parse(localStorage.getItem('TealYouth_Session') || 'null');
         let taskViewMode = 'kanban', quickPeriodFilter = 'ALL', chartsInstance = {};
-        let taskModalObj, projectModalObj, memberModalObj, reportModalObj, calendarModalObj;
         let calendarStartDate = new Date();
+        let modalObjs = {};
 
+        // CHẠY KHI MỞ TRANG
         window.addEventListener('DOMContentLoaded', () => {
-            taskModalObj = new bootstrap.Modal(document.getElementById('taskModal'));
-            projectModalObj = new bootstrap.Modal(document.getElementById('projectModal'));
-            memberModalObj = new bootstrap.Modal(document.getElementById('memberModal'));
-            reportModalObj = new bootstrap.Modal(document.getElementById('reportModal'));
-            calendarModalObj = new bootstrap.Modal(document.getElementById('calendarModal'));
+            modalObjs.task = new bootstrap.Modal(document.getElementById('taskModal'));
+            modalObjs.project = new bootstrap.Modal(document.getElementById('projectModal'));
+            modalObjs.member = new bootstrap.Modal(document.getElementById('memberModal'));
+            modalObjs.report = new bootstrap.Modal(document.getElementById('reportModal'));
+            modalObjs.calendar = new bootstrap.Modal(document.getElementById('calendarModal'));
             
-            document.getElementById('setting-gas-url').value = DEFAULT_GAS_URL;
-            
-            // Render luôn dữ liệu đã cứu từ LocalBackup trước khi tải Cloud
-            initAppUI(); 
-            
-            // Sau đó gọi lấy Cloud để cập nhật cái mới nhất (nếu có)
-            if(DEFAULT_GAS_URL) {
+            document.getElementById('setting-gas-url').value = MASTER_GAS_URL;
+
+            // Khôi phục dữ liệu nháp nếu có để render luôn không cần chờ tải
+            const localBackup = localStorage.getItem('TealYouth_Local_Backup');
+            if(localBackup) { try { AppState = JSON.parse(localBackup); } catch(e){} }
+
+            if (activeSession) {
+                showMainApp();
                 syncDataFromCloud(true);
+            } else {
+                document.getElementById('auth-screen').style.display = 'flex';
+                document.getElementById('app-wrapper').style.display = 'none';
             }
         });
 
-        function initAppUI() {
-            updateUserProfileUI();
-            populateDropdowns();
-            switchView('dashboard'); // Tự render dashboard từ AppState hiện tại
+        // ================= XỬ LÝ AUTH (ĐĂNG NHẬP / ĐĂNG KÝ) =================
+        function switchAuthTab(tab) {
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+            document.getElementById('form-login').classList.toggle('d-none', tab !== 'login');
+            document.getElementById('form-register').classList.toggle('d-none', tab !== 'register');
         }
 
-        function saveData() {
-            // Luôn lưu nháp vào máy trước
-            localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState));
-            document.getElementById('badge-total-tasks').textContent = AppState.tasks.length;
+        // ĐÃ CẬP NHẬT: Thêm header CORS để sửa lỗi "Đang xử lý..." trên máy khác
+        function handleLogin(e) {
+            e.preventDefault(); 
+            const gas = document.getElementById('setting-gas-url').value; 
+            if(!gas || gas.includes('DÁN_LINK')) return Swal.fire('Lỗi','Chưa có link GAS','error');
             
-            const gasUrl = document.getElementById('setting-gas-url').value.trim();
-            if (!gasUrl) return;
-
-            document.getElementById('save-status-text').textContent = 'Đang đồng bộ...';
+            const btn = document.getElementById('btn-login'); 
+            const originalText = btn.innerHTML;
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
             
-            fetch(gasUrl, {
-                method: 'POST',
-                mode: 'no-cors',
+            fetch(gas, {
+                method: 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: 'saveAll', data: AppState })
-            }).then(() => {
-                document.getElementById('save-status-text').textContent = 'Đã đồng bộ Cloud';
-            }).catch(err => {
-                console.error(err);
-                document.getElementById('save-status-text').textContent = 'Lỗi đồng bộ';
+                body: JSON.stringify({
+                    action: 'login', 
+                    username: document.getElementById('login-username').value.trim(), 
+                    password: document.getElementById('login-password').value.trim()
+                })
+            })
+            .then(r => r.json())
+            .then(d => { 
+                if(d.status === 'success') { 
+                    activeSession = d.user; 
+                    localStorage.setItem('TealYouth_Session', JSON.stringify(activeSession)); 
+                    location.reload(); 
+                } else { 
+                    Swal.fire('Lỗi', d.message, 'error'); 
+                    btn.disabled = false; 
+                    btn.innerHTML = originalText; 
+                } 
+            })
+            .catch(err => {
+                Swal.fire('Lỗi', 'Trình duyệt chặn kết nối (CORS). Hãy thử dùng tab ẩn danh.', 'error'); 
+                btn.disabled = false; 
+                btn.innerHTML = originalText;
             });
         }
 
+        // ĐÃ CẬP NHẬT: Thêm header CORS để sửa lỗi đăng ký
+        function handleRegister(e) {
+            e.preventDefault(); 
+            const gas = document.getElementById('setting-gas-url').value; 
+            if(!gas || gas.includes('DÁN_LINK')) return Swal.fire('Lỗi','Chưa có link GAS','error');
+            
+            const btn = document.getElementById('btn-register'); 
+            const originalText = btn.innerHTML;
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
+            
+            const f = document.getElementById('reg-fullname').value.trim();
+            const u = document.getElementById('reg-username').value.trim(); 
+            const p = document.getElementById('reg-password').value.trim();
+
+            fetch(gas, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'register', fullname: f, username: u, password: p })
+            })
+            .then(r => r.json())
+            .then(d => {
+                if(d.status === 'success') { 
+                    Swal.fire('Thành công', 'Đã tạo tài khoản, hãy đăng nhập!', 'success'); 
+                    switchAuthTab('login'); 
+                } else { 
+                    Swal.fire('Lỗi', d.message, 'error'); 
+                }
+                btn.disabled = false; 
+                btn.innerHTML = originalText;
+            })
+            .catch(err => {
+                Swal.fire('Lỗi', 'Trình duyệt chặn kết nối. Hãy thử dùng tab ẩn danh.', 'error'); 
+                btn.disabled = false; 
+                btn.innerHTML = originalText;
+            });
+        }
+
+        function handleLogout() { localStorage.removeItem('TealYouth_Session'); location.reload(); }
+
+        function showMainApp() {
+            document.getElementById('auth-screen').style.display = 'none'; 
+            let appWrap = document.getElementById('app-wrapper');
+            appWrap.style.display = 'block';
+            setTimeout(() => appWrap.style.opacity = '1', 50); // Hiệu ứng mượt
+            
+            document.getElementById('topbar-username').textContent = '@' + activeSession.username;
+            document.getElementById('topbar-unit-name').textContent = activeSession.fullname;
+            
+            initAppUI(); // Render luôn bản nháp Local
+        }
+
+        // ================= ĐỒNG BỘ DỮ LIỆU CLOUD =================
         function syncDataFromCloud(silent = false) {
-            const gasUrl = document.getElementById('setting-gas-url').value.trim();
-            if (!gasUrl) {
-                if(!silent) Swal.fire('Thông báo', 'Bạn chưa cấu hình Link Cài Đặt Google Sheets!', 'warning');
-                return;
-            }
+            if (!MASTER_GAS_URL || MASTER_GAS_URL.includes('DÁN_LINK')) return;
+            if (!silent) Swal.fire({ title: 'Đang tải dữ liệu từ Cloud...', didOpen: () => Swal.showLoading() });
 
-            if(!silent) Swal.fire({ title: 'Đang kết nối tải dữ liệu...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 12000);
-
-            fetch(gasUrl, { signal: controller.signal })
-                .then(res => res.json())
-                .then(data => {
-                    clearTimeout(timeoutId);
-                    if (data && data.tasks) {
-                        // Nếu lấy thành công, ta mới ghi đè AppState
-                        AppState = data;
-                        if(data.settings && data.settings.name) AppState.user = data.settings;
-                        if(!AppState.calendarEvents) AppState.calendarEvents = [];
-                        
-                        // Cập nhật lại bộ nhớ nháp máy tính
-                        localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState));
-                    }
-                    if(!silent) Swal.close();
-                    initAppUI();
-                    if(!silent) Swal.fire({ icon: 'success', title: 'Tải dữ liệu hoàn tất!', timer: 1000, showConfirmButton: false });
-                })
-                .catch(err => {
-                    clearTimeout(timeoutId);
-                    if(!silent) Swal.close();
-                    
-                    // NẾU BỊ LỖI KẾT NỐI (DO LỖI CORS HOẶC RỚT MẠNG), CỨ TIẾP TỤC SỬ DỤNG DỮ LIỆU ĐÃ LƯU TRONG LOCALSTORAGE
-                    initAppUI();
-                    
-                    if(!silent) {
-                        Swal.fire({
-                            title: 'Lỗi Phân Quyền Sheets', 
-                            text: 'Trình duyệt chặn kéo dữ liệu vì Web App chưa được phân quyền đúng. Đang tạm thời dùng dữ liệu nháp (Local Backup). Bạn hãy đọc hướng dẫn cấu hình ở trên để sửa lỗi!',
-                            icon: 'warning'
-                        });
-                    }
-                });
+            fetch(MASTER_GAS_URL).then(res => res.json()).then(data => {
+                if (data && data.tasks) {
+                    AppState = data;
+                    localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState));
+                }
+                if (!silent) Swal.fire({ icon: 'success', title: 'Hoàn tất tải dữ liệu!', timer: 1000, showConfirmButton: false });
+                initAppUI();
+            }).catch(err => {
+                if (!silent) Swal.fire('Lỗi', 'Không thể kết nối. Hệ thống đang dùng dữ liệu nháp (Local Backup).', 'error');
+            });
         }
 
-        function switchView(viewName) {
+        function saveData() {
+            localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState)); // Luôn lưu nháp trước
+            document.getElementById('badge-total-tasks').textContent = AppState.tasks.length;
+            if (!MASTER_GAS_URL || MASTER_GAS_URL.includes('DÁN_LINK')) return;
+            
+            document.getElementById('save-status-text').textContent = 'Đang đẩy lên Cloud...';
+            // ĐÃ CẬP NHẬT: Thêm header CORS cho lệnh lưu dữ liệu
+            fetch(MASTER_GAS_URL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'saveAll', data: AppState }) 
+            })
+            .then(() => document.getElementById('save-status-text').textContent = 'Đã lưu Cloud')
+            .catch(() => document.getElementById('save-status-text').textContent = 'Lỗi lưu mạng');
+        }
+
+        // ================= GIAO DIỆN & TIỆN ÍCH =================
+        function initAppUI() {
+            if(!AppState.user) AppState.user = {name: activeSession.fullname, title: "Cán Bộ", avatar: ""};
+            updateUserProfileUI();
+            populateDropdowns(); 
+            // Xác định tab đang xem, nếu không mặc định dashboard
+            const activeView = document.querySelector('.nav-link-custom.active')?.getAttribute('onclick')?.match(/'([^']+)'/)?.[1] || 'dashboard';
+            switchView(activeView); 
+        }
+
+        function updateUserProfileUI() {
+            if(AppState.user.name) document.getElementById('topbar-unit-name').textContent = AppState.user.name;
+            if(AppState.user.avatar) { document.getElementById('topbar-avatar').src = AppState.user.avatar; document.getElementById('settings-avatar-preview').src = AppState.user.avatar; }
+            document.getElementById('setting-user-name').value = AppState.user.name || activeSession.fullname;
+            document.getElementById('setting-user-title').value = AppState.user.title || '';
+        }
+
+        function saveUserSettings(e) {
+            e.preventDefault();
+            AppState.user.name = document.getElementById('setting-user-name').value;
+            AppState.user.title = document.getElementById('setting-user-title').value;
+            saveData(); updateUserProfileUI(); 
+            Swal.fire('Thành công', 'Đã lưu cài đặt Cán bộ!', 'success');
+        }
+
+        function handleAvatarUpload(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) { AppState.user.avatar = evt.target.result; updateUserProfileUI(); saveData(); };
+            reader.readAsDataURL(file);
+        }
+
+        function switchView(v) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('d-none'));
+            document.getElementById(`view-${v}`).classList.remove('d-none');
             document.querySelectorAll('.nav-link-custom').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${viewName}`).classList.remove('d-none');
-            document.querySelector(`.nav-link-custom[onclick="switchView('${viewName}')"]`)?.classList.add('active');
+            document.querySelector(`[onclick="switchView('${v}')"]`)?.classList.add('active');
+            
+            const titles = { dashboard: 'Tổng Quan Hoạt Động', tasks: 'Quản Lý Nhiệm Vụ & Tiến Độ', projects: 'Chương Trình & Giấy Tờ', members: 'Quản Lý Đoàn Viên', reports: 'Báo Cáo & Đánh Giá', calendar: 'Lịch Công Tác', export: 'Xuất Báo Cáo', settings: 'Cài Đặt Hệ Thống' };
+            document.getElementById('page-title').textContent = titles[v] || 'ĐTN THPT Nguyễn Văn Chất';
 
-            const titles = { dashboard: 'Tổng Quan Hoạt Động', tasks: 'Quản Lý Nhiệm Vụ & Tiến Độ', projects: 'Chương Trình & Giấy Tờ', members: 'Quản Lý Đoàn Viên', reports: 'Báo Cáo & Đánh Giá', calendar: 'Lịch Công Tác', export: 'Xuất Báo Cáo', settings: 'Cài Đặt Đơn Vị' };
-            document.getElementById('page-title').textContent = titles[viewName] || 'ĐTN THPT Nguyễn Văn Chất';
+            if(v==='dashboard') renderDashboard(); if(v==='tasks') renderTasks(); if(v==='projects') renderProjects(); if(v==='members') renderMembers(); if(v==='reports') renderReports(); if(v==='calendar') renderCalendar();
+        }
+        function toggleSidebar() { document.getElementById('app-sidebar').classList.toggle('show'); }
 
-            if (viewName === 'dashboard') renderDashboard();
-            if (viewName === 'tasks') renderTasks();
-            if (viewName === 'projects') renderProjects();
-            if (viewName === 'members') renderMembers();
-            if (viewName === 'reports') renderReports();
-            if (viewName === 'calendar') renderCalendar();
+        function populateDropdowns() {
+            const pOpts = AppState.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+            const mOpts = `<option value="">-- Chọn cán bộ phụ trách --</option>` + AppState.members.map(m => `<option value="${m.id}">${m.name} (${m.email})</option>`).join('');
+            document.getElementById('task-project').innerHTML = pOpts; document.getElementById('report-project').innerHTML = pOpts;
+            document.getElementById('task-member').innerHTML = mOpts; document.getElementById('cal-event-member').innerHTML = mOpts;
         }
 
-        function toggleSidebar() { document.getElementById('app-sidebar').classList.toggle('show'); }
-        function onQuickPeriodChange(val) { quickPeriodFilter = val; renderTasks(); renderDashboard(); }
+        // ================= CÁC MODULE CHỨC NĂNG =================
 
-        // --- DASHBOARD ---
+        // 1. DASHBOARD
+        function onQuickPeriodChange(val) { quickPeriodFilter = val; renderTasks(); renderDashboard(); }
+        function filterByPeriod(tasks) {
+            if (quickPeriodFilter === 'ALL') return tasks; const now = new Date();
+            return tasks.filter(t => { if (!t.deadline) return false; const d = new Date(t.deadline);
+                if (quickPeriodFilter === 'WEEK') { const f = new Date(now.setDate(now.getDate()-now.getDay())); const l = new Date(now.setDate(now.getDate()+6)); return d>=f && d<=l; }
+                if (quickPeriodFilter === 'MONTH') { return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }
+                if (quickPeriodFilter === 'SEMESTER') { const m = (now.getMonth()+1)<=6 ? (d.getMonth()+1<=6) : (d.getMonth()+1>6); return m && d.getFullYear()===now.getFullYear(); } return true;
+            });
+        }
         function renderDashboard() {
             const list = filterByPeriod(AppState.tasks);
-            const total = list.length, inProg = list.filter(t => t.status === 'IN_PROGRESS').length;
-            const done = list.filter(t => t.status === 'DONE').length, overdue = list.filter(t => isOverdue(t)).length;
-
-            document.getElementById('dash-total').textContent = total;
-            document.getElementById('dash-inprogress').textContent = inProg;
-            document.getElementById('dash-completed').textContent = done;
-            document.getElementById('dash-completed-rate').textContent = `${total ? Math.round((done/total)*100) : 0}% hoàn thành`;
+            const total = list.length, inProg = list.filter(t => t.status === 'IN_PROGRESS').length, done = list.filter(t => t.status === 'DONE').length, overdue = list.filter(t => t.status !== 'DONE' && t.deadline && t.deadline < new Date().toISOString().split('T')[0]).length;
+            
+            document.getElementById('badge-total-tasks').textContent = AppState.tasks.length;
+            document.getElementById('dash-total').textContent = total; document.getElementById('dash-inprogress').textContent = inProg;
+            document.getElementById('dash-completed').textContent = done; document.getElementById('dash-completed-rate').textContent = `${total ? Math.round((done/total)*100) : 0}% hoàn thành`;
             document.getElementById('dash-overdue').textContent = overdue;
 
             document.getElementById('dash-urgent-list').innerHTML = list.filter(t => t.priority === 'Urgent' && t.status !== 'DONE').map(t => {
                 const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa giao', email: ''};
-                return `
-                    <div class="p-2 border rounded-3 bg-light d-flex align-items-center justify-content-between">
-                        <div>
-                            <div class="fw-bold fs-7">${t.title}</div>
-                            <small class="text-danger d-block">Hạn: ${t.deadline ? t.deadline.split('T')[0] : 'Không'} - ${m.name}</small>
-                        </div>
-                        <div class="d-flex gap-1">
-                            <button class="btn btn-sm btn-outline-primary" onclick="sendRealEmail('${t.id}')" title="Gửi email"><i class="fa-solid fa-envelope"></i></button>
-                            <button class="btn btn-sm btn-outline-teal" onclick="quickComplete('${t.id}')" title="Hoàn thành"><i class="fa-solid fa-check"></i></button>
-                        </div>
-                    </div>
-                `;
-            }).join('') || '<p class="text-muted small text-center my-3">Không có nhiệm vụ cấp bách!</p>';
-            renderActivityChart();
-        }
-
-        function renderActivityChart() {
-            const ctx = document.getElementById('activityChart').getContext('2d');
+                return `<div class="p-2 border rounded-3 bg-light d-flex align-items-center justify-content-between"><div><div class="fw-bold fs-7">${t.title}</div><small class="text-danger d-block">Hạn: ${t.deadline||'Không'} - ${m.name}</small></div><div class="d-flex gap-1"><button class="btn btn-sm btn-outline-primary" onclick="sendRealEmail('${t.id}')" title="Gửi mail"><i class="fa-solid fa-envelope"></i></button><button class="btn btn-sm btn-outline-teal" onclick="quickComplete('${t.id}')" title="Hoàn thành"><i class="fa-solid fa-check"></i></button></div></div>`;
+            }).join('') || '<p class="text-muted small text-center my-3">Tuyệt vời, không có nhiệm vụ khẩn cấp nào đang kẹt!</p>';
+            
             if (chartsInstance.activity) chartsInstance.activity.destroy();
-            chartsInstance.activity = new Chart(ctx, {
-                type: 'bar',
-                data: { labels: AppState.projects.map(p => p.name), datasets: [{ label: 'Số lượng nhiệm vụ', data: AppState.projects.map(p => AppState.tasks.filter(t => t.projectId === p.id).length), backgroundColor: '#0d9488' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-            });
+            chartsInstance.activity = new Chart(document.getElementById('activityChart').getContext('2d'), { type: 'bar', data: { labels: AppState.projects.map(p => p.name), datasets: [{ label: 'Số nhiệm vụ', data: AppState.projects.map(p => AppState.tasks.filter(t => t.projectId === p.id).length), backgroundColor: '#0d9488', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         }
 
-        // --- TASKS ---
-        function setTaskViewMode(mode) {
-            taskViewMode = mode;
-            document.getElementById('btn-view-kanban').classList.toggle('active', mode === 'kanban');
-            document.getElementById('btn-view-table').classList.toggle('active', mode === 'table');
-            document.getElementById('kanban-container').classList.toggle('d-none', mode !== 'kanban');
-            document.getElementById('table-container').classList.toggle('d-none', mode !== 'table');
-            renderTasks();
-        }
-
+        // 2. TASKS
+        function getPriorityLabel(p) { return { Urgent: 'Đặc biệt gấp', High: 'Quan trọng', Medium: 'Thường xuyên', Low: 'Thông tin' }[p] || p; }
+        function getStatusBadge(s) { return { TODO: '<span class="badge bg-secondary">Cần làm</span>', IN_PROGRESS: '<span class="badge bg-primary">Đang làm</span>', REVIEW: '<span class="badge bg-warning text-dark">Nghiệm thu</span>', DONE: '<span class="badge bg-success">Hoàn thành</span>' }[s] || s; }
+        
+        function setTaskViewMode(m) { taskViewMode = m; document.getElementById('btn-view-kanban').classList.toggle('active', m==='kanban'); document.getElementById('btn-view-table').classList.toggle('active', m==='table'); document.getElementById('kanban-container').classList.toggle('d-none', m!=='kanban'); document.getElementById('table-container').classList.toggle('d-none', m!=='table'); renderTasks(); }
         function renderTasks() {
-            const kw = document.getElementById('task-search-input').value.toLowerCase();
-            const pr = document.getElementById('filter-priority').value;
-            const st = document.getElementById('filter-status').value;
-
+            const kw = document.getElementById('task-search-input').value.toLowerCase(), pr = document.getElementById('filter-priority').value, st = document.getElementById('filter-status').value;
             let list = filterByPeriod(AppState.tasks);
             if (kw) list = list.filter(t => t.title.toLowerCase().includes(kw));
             if (pr !== 'ALL') list = list.filter(t => t.priority === pr);
             if (st !== 'ALL') list = list.filter(t => t.status === st);
-
+            
             if (taskViewMode === 'kanban') {
                 const cols = [{k: 'TODO', n: 'Cần Làm', c: '#64748b'}, {k: 'IN_PROGRESS', n: 'Đang Làm', c: '#0284c7'}, {k: 'REVIEW', n: 'Nghiệm Thu', c: '#d97706'}, {k: 'DONE', n: 'Hoàn Thành', c: '#059669'}];
-                document.getElementById('kanban-container').innerHTML = cols.map(col => `
-                    <div class="col-12 col-md-6 col-xl-3">
-                        <div class="kanban-col" ondragover="event.preventDefault()" ondrop="dropTask(event, '${col.k}')">
-                            <div class="kanban-header"><span><i class="fa-solid fa-circle me-2" style="color:${col.c}"></i>${col.n}</span><span class="badge bg-white text-dark">${list.filter(t => t.status === col.k).length}</span></div>
-                            <div>${list.filter(t => t.status === col.k).map(t => renderCardHtml(t)).join('')}</div>
-                        </div>
-                    </div>
-                `).join('');
+                document.getElementById('kanban-container').innerHTML = cols.map(c => `
+                    <div class="col-12 col-md-6 col-xl-3"><div class="kanban-col" ondragover="event.preventDefault()" ondrop="dropTask(event, '${c.k}')">
+                        <div class="kanban-header"><span><i class="fa-solid fa-circle me-2" style="color:${c.c}"></i>${c.n}</span><span class="badge bg-white text-dark">${list.filter(t=>t.status===c.k).length}</span></div>
+                        ${list.filter(t=>t.status===c.k).map(t => {
+                            const p = AppState.projects.find(x=>x.id===t.projectId)||{}, m = AppState.members.find(x=>x.id===t.memberId)||{name:'Chưa giao'}; const subs = t.subtasks||[];
+                            return `<div class="kanban-card" draggable="true" ondragstart="event.dataTransfer.setData('taskId', '${t.id}')">
+                                <div class="d-flex justify-content-between mb-2"><span class="badge badge-priority-${t.priority}">${getPriorityLabel(t.priority)}</span><button class="btn btn-sm text-muted p-0" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen"></i></button></div>
+                                <h6 class="fw-bold mb-1 text-dark fs-7">${t.title}</h6>
+                                <small class="d-block text-muted mb-1"><i class="fa-solid fa-folder me-1"></i>${p.name||'Chưa xếp'}</small>
+                                <small class="d-block text-teal mb-2 fw-semibold"><i class="fa-solid fa-user me-1"></i>${m.name}</small>${t.attachment ? `<div class="mb-2"><a href="${t.attachment}" target="_blank" class="badge bg-light text-dark border text-decoration-none"><i class="fa-solid fa-paperclip me-1"></i>Đính kèm</a></div>` : ''}
+                                ${subs.length ? `<small class="d-block text-muted mb-2"><i class="fa-solid fa-list-check me-1"></i>Việc con: ${subs.filter(s=>s.done).length}/${subs.length}</small>` : ''}
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <small class="${t.deadline && t.deadline < new Date().toISOString().split('T')[0] && t.status!=='DONE'?'text-danger fw-bold':'text-muted'}"><i class="fa-solid fa-calendar me-1"></i>${t.deadline||'Không'}</small>
+                                    <select class="form-select form-select-sm w-auto py-0 px-2" style="font-size: 11px;" onchange="quickUpdateStatus('${t.id}', this.value)">
+                                        <option value="TODO" ${t.status==='TODO'?'selected':''}>Cần làm</option><option value="IN_PROGRESS" ${t.status==='IN_PROGRESS'?'selected':''}>Đang làm</option><option value="REVIEW" ${t.status==='REVIEW'?'selected':''}>Nghiệm thu</option><option value="DONE" ${t.status==='DONE'?'selected':''}>Xong</option>
+                                    </select>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div></div>`).join('');
             } else {
                 document.getElementById('task-table-body').innerHTML = list.map(t => {
-                    const p = AppState.projects.find(x => x.id === t.projectId) || {name: 'Chương trình'};
-                    const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công', email: 'N/A'};
-                    return `
-                        <tr>
-                            <td class="fw-semibold">${t.title}</td>
-                            <td><span class="badge bg-light text-dark border">${p.name}</span></td>
-                            <td><i class="fa-solid fa-user text-teal me-1"></i>${m.name}<br><small class="text-muted">${m.email}</small></td>
-                            <td><span class="badge badge-priority-${t.priority}">${getPriorityLabel(t.priority)}</span></td>
-                            <td>
-                                ${getStatusBadge(t.status)}
-                                <select class="form-select form-select-sm mt-1" onchange="quickUpdateStatus('${t.id}', this.value)">
-                                    <option value="TODO" ${t.status==='TODO'?'selected':''}>Cần làm</option>
-                                    <option value="IN_PROGRESS" ${t.status==='IN_PROGRESS'?'selected':''}>Đang làm</option>
-                                    <option value="REVIEW" ${t.status==='REVIEW'?'selected':''}>Nghiệm thu</option>
-                                    <option value="DONE" ${t.status==='DONE'?'selected':''}>Hoàn thành</option>
-                                </select>
-                            </td>
-                            <td>${t.attachment ? `<a href="${t.attachment}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-paperclip me-1"></i>Xem</a>` : '<span class="text-muted small">Không</span>'}</td>
-                            <td class="text-end">
-                                <button class="btn btn-sm btn-outline-teal me-1" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
+                    const p = AppState.projects.find(x=>x.id===t.projectId)||{}, m = AppState.members.find(x=>x.id===t.memberId)||{name:'Chưa phân công', email:''};
+                    return `<tr><td class="fw-semibold">${t.title}</td><td><span class="badge bg-light text-dark border">${p.name||''}</span></td><td><i class="fa-solid fa-user text-teal me-1"></i>${m.name}<br><small class="text-muted">${m.email}</small></td><td><span class="badge badge-priority-${t.priority}">${getPriorityLabel(t.priority)}</span></td><td>${getStatusBadge(t.status)} <select class="form-select form-select-sm mt-1" onchange="quickUpdateStatus('${t.id}', this.value)"><option value="TODO" ${t.status==='TODO'?'selected':''}>Cần làm</option><option value="IN_PROGRESS" ${t.status==='IN_PROGRESS'?'selected':''}>Đang làm</option><option value="REVIEW" ${t.status==='REVIEW'?'selected':''}>Nghiệm thu</option><option value="DONE" ${t.status==='DONE'?'selected':''}>Xong</option></select></td><td>${t.attachment?`<a href="${t.attachment}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-paperclip"></i></a>`:'<span class="text-muted small">Không</span>'}</td><td class="text-end"><button class="btn btn-sm btn-outline-primary me-1" onclick="sendRealEmail('${t.id}')" title="Gửi mail"><i class="fa-solid fa-envelope"></i></button><button class="btn btn-sm btn-outline-teal me-1" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
                 }).join('');
             }
         }
-
-        function renderCardHtml(t) {
-            const p = AppState.projects.find(x => x.id === t.projectId) || {name: 'Chương trình'};
-            const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công'};
-            const subs = t.subtasks || [];
-            const doneSubs = subs.filter(s => s.done).length;
-            const deadlineFormatted = t.deadline ? String(t.deadline).split('T')[0] : '';
-            return `
-                <div class="kanban-card" draggable="true" ondragstart="event.dataTransfer.setData('taskId', '${t.id}')">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="badge badge-priority-${t.priority}">${getPriorityLabel(t.priority)}</span>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa nhiệm vụ</a></li>
-                                <li><a class="dropdown-item" onclick="sendRealEmail('${t.id}')"><i class="fa-solid fa-envelope me-2"></i>Gửi Email Nhắc</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item text-danger" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h6 class="fw-bold mb-1 text-dark fs-7">${t.title}</h6>
-                    <small class="d-block text-muted mb-1"><i class="fa-solid fa-folder me-1"></i>${p.name}</small>
-                    <small class="d-block text-teal mb-2 fw-semibold"><i class="fa-solid fa-user me-1"></i>${m.name}</small>
-                    ${t.attachment ? `<div class="mb-2"><a href="${t.attachment}" target="_blank" class="badge bg-light text-dark border text-decoration-none"><i class="fa-solid fa-paperclip me-1"></i>Tài liệu đính kèm</a></div>` : ''}
-                    ${subs.length ? `<small class="d-block text-muted mb-2"><i class="fa-solid fa-list-check me-1"></i>Việc con: ${doneSubs}/${subs.length}</small>` : ''}
-                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                        <small class="${isOverdue(t)?'text-danger fw-bold':'text-muted'}"><i class="fa-solid fa-calendar me-1"></i>${deadlineFormatted || 'Không hạn'}</small>
-                        <select class="form-select form-select-sm w-auto py-0 px-2" style="font-size: 11px;" onchange="quickUpdateStatus('${t.id}', this.value)">
-                            <option value="TODO" ${t.status==='TODO'?'selected':''}>Cần làm</option>
-                            <option value="IN_PROGRESS" ${t.status==='IN_PROGRESS'?'selected':''}>Đang làm</option>
-                            <option value="REVIEW" ${t.status==='REVIEW'?'selected':''}>Nghiệm thu</option>
-                            <option value="DONE" ${t.status==='DONE'?'selected':''}>Xong</option>
-                        </select>
-                    </div>
-                </div>
-            `;
+        function dropTask(ev, st) { ev.preventDefault(); const t = AppState.tasks.find(x => x.id === ev.dataTransfer.getData("taskId")); if(t) { t.status = st; saveData(); renderTasks(); renderDashboard(); } }
+        function openTaskModal(id=null) {
+            populateDropdowns(); document.getElementById('task-form').reset(); document.getElementById('subtasks-input-container').innerHTML = '';
+            if(id) { 
+                const t = AppState.tasks.find(x=>x.id===id); document.getElementById('taskModalTitle').textContent = 'Sửa Nhiệm Vụ'; document.getElementById('task-id').value=t.id; document.getElementById('task-title').value=t.title; document.getElementById('task-project').value=t.projectId; document.getElementById('task-member').value=t.memberId||''; document.getElementById('task-priority').value=t.priority; document.getElementById('task-status').value=t.status; document.getElementById('task-deadline').value=t.deadline||''; document.getElementById('task-attachment').value=t.attachment||''; document.getElementById('task-desc').value=t.desc||''; 
+                (t.subtasks||[]).forEach(s => addSubtaskInput(s.title, s.done));
+            } else { document.getElementById('taskModalTitle').textContent = 'Thêm Mới'; document.getElementById('task-id').value=''; document.getElementById('task-deadline').value = new Date().toISOString().split('T')[0]; }
+            modalObjs.task.show();
         }
-
-        function dropTask(ev, newStatus) { ev.preventDefault(); const taskId = ev.dataTransfer.getData("taskId"); const task = AppState.tasks.find(t => t.id === taskId); if (task) { task.status = newStatus; saveData(); renderTasks(); } }
-
-        function sendRealEmail(taskId) {
-            const t = AppState.tasks.find(x => x.id === taskId);
-            if (!t) return;
-            const m = AppState.members.find(x => x.id === t.memberId);
-            if (!m || !m.email) { Swal.fire('Lỗi', 'Chưa có email trong CSDL!', 'warning'); return; }
-            const gasUrl = document.getElementById('setting-gas-url').value.trim();
-            Swal.fire({ title: 'Đang gửi Email...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-            const payload = { action: 'sendEmail', email: m.email, subject: `[ĐOÀN TN THPT Nguyễn Văn Chất] Đôn đốc tiến độ: ${t.title}`, body: `Chào đồng chí ${m.name},\nBan Chấp hành gửi email đôn đốc:\n- Tên nhiệm vụ: ${t.title}\n- Hạn chót: ${t.deadline ? String(t.deadline).split('T')[0] : 'Không'}\n- Trạng thái: ${getStatusLabel(t.status)}\n\nĐề nghị đồng chí khẩn trương hoàn thành.\nTrân trọng.` };
-            fetch(gasUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
-                .then(() => Swal.fire('Thành công!', `Đã gửi email tới ${m.email}`, 'success'))
-                .catch(err => Swal.fire('Lỗi', 'Không thể gửi email.', 'error'));
+        function addSubtaskInput(title='', done=false) {
+            const div = document.createElement('div'); div.className = 'input-group input-group-sm';
+            div.innerHTML = `<div class="input-group-text"><input class="form-check-input mt-0" type="checkbox" ${done?'checked':''}></div><input type="text" class="form-control" placeholder="Tên việc con..." value="${title}"><button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
+            document.getElementById('subtasks-input-container').appendChild(div);
         }
-
-        function openTaskModal(taskId = null) {
-            populateDropdowns();
-            document.getElementById('task-form').reset();
-            document.getElementById('subtasks-input-container').innerHTML = '';
-            if (taskId) {
-                const t = AppState.tasks.find(x => x.id === taskId);
-                document.getElementById('taskModalTitle').textContent = 'Chỉnh Sửa Nhiệm Vụ';
-                document.getElementById('task-id').value = t.id;
-                document.getElementById('task-title').value = t.title;
-                document.getElementById('task-project').value = t.projectId;
-                document.getElementById('task-member').value = t.memberId || '';
-                document.getElementById('task-priority').value = t.priority;
-                document.getElementById('task-status').value = t.status;
-                document.getElementById('task-deadline').value = t.deadline ? String(t.deadline).split('T')[0] : '';
-                document.getElementById('task-attachment').value = t.attachment || '';
-                document.getElementById('task-desc').value = t.desc || '';
-                (t.subtasks || []).forEach(s => addSubtaskInput(s.title, s.done));
-            } else {
-                document.getElementById('taskModalTitle').textContent = 'Thêm Nhiệm Vụ Hoạt Động';
-                document.getElementById('task-id').value = '';
-                document.getElementById('task-deadline').value = new Date().toISOString().split('T')[0];
-            }
-            taskModalObj.show();
-        }
-
-        function addSubtaskInput(title = '', done = false) {
-            const container = document.getElementById('subtasks-input-container');
-            const row = document.createElement('div');
-            row.className = 'input-group input-group-sm';
-            row.innerHTML = `<div class="input-group-text"><input class="form-check-input mt-0" type="checkbox" ${done ? 'checked' : ''}></div><input type="text" class="form-control" placeholder="Tên việc con..." value="${title}"><button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
-            container.appendChild(row);
-        }
-
         function saveTask() {
-            const id = document.getElementById('task-id').value;
-            const title = document.getElementById('task-title').value.trim();
-            if (!title) { Swal.fire('Lỗi', 'Vui lòng nhập tên nhiệm vụ', 'error'); return; }
-
-            const subtasks = Array.from(document.querySelectorAll('#subtasks-input-container .input-group')).map(row => ({ title: row.querySelector('input[type="text"]').value.trim(), done: row.querySelector('input[type="checkbox"]').checked })).filter(s => s.title);
-            const deadlineVal = document.getElementById('task-deadline').value;
-
-            const payload = {
-                title, projectId: document.getElementById('task-project').value,
-                memberId: document.getElementById('task-member').value,
-                priority: document.getElementById('task-priority').value, status: document.getElementById('task-status').value,
-                deadline: deadlineVal ? deadlineVal.split('T')[0] : '', 
-                attachment: document.getElementById('task-attachment').value.trim(),
-                desc: document.getElementById('task-desc').value.trim(), subtasks
-            };
-
-            if (id) { Object.assign(AppState.tasks.find(t => t.id === id), payload); } else { AppState.tasks.unshift({ id: 'task-' + Date.now(), ...payload }); }
-            saveData(); taskModalObj.hide(); renderTasks();
-            Swal.fire({ icon: 'success', title: 'Đã lưu!', timer: 1000, showConfirmButton: false });
+            const id = document.getElementById('task-id').value, title = document.getElementById('task-title').value.trim(); if(!title) { Swal.fire('Lỗi','Nhập tên nhiệm vụ','error'); return; }
+            const subtasks = Array.from(document.querySelectorAll('#subtasks-input-container .input-group')).map(r => ({title: r.querySelector('input[type="text"]').value.trim(), done: r.querySelector('input[type="checkbox"]').checked})).filter(s=>s.title);
+            const payload = { title, projectId: document.getElementById('task-project').value, memberId: document.getElementById('task-member').value, priority: document.getElementById('task-priority').value, status: document.getElementById('task-status').value, deadline: document.getElementById('task-deadline').value, attachment: document.getElementById('task-attachment').value.trim(), desc: document.getElementById('task-desc').value.trim(), subtasks };
+            if(id) Object.assign(AppState.tasks.find(x=>x.id===id), payload); else AppState.tasks.unshift({id: 'task-'+Date.now(), ...payload});
+            saveData(); modalObjs.task.hide(); renderTasks(); renderDashboard(); Swal.fire({icon: 'success', title: 'Đã lưu!', timer: 1000, showConfirmButton: false});
+        }
+        function deleteTask(id) { Swal.fire({title: 'Xóa?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626'}).then(r => { if(r.isConfirmed) { AppState.tasks = AppState.tasks.filter(t=>t.id!==id); saveData(); renderTasks(); renderDashboard(); }}); }
+        function quickUpdateStatus(id, st) { const t = AppState.tasks.find(x=>x.id===id); if(t) { t.status = st; saveData(); renderTasks(); renderDashboard(); } }
+        function quickComplete(id) { quickUpdateStatus(id, 'DONE'); }
+        // ĐÃ CẬP NHẬT: Thêm header CORS cho lệnh gửi email
+        function sendRealEmail(id) {
+            const t = AppState.tasks.find(x=>x.id===id); if(!t) return; const m = AppState.members.find(x=>x.id===t.memberId);
+            if(!m || !m.email) { Swal.fire('Lỗi','Chưa có email trong CSDL','warning'); return; }
+            Swal.fire({ title: 'Đang gửi Mail...', didOpen: () => Swal.showLoading() });
+            fetch(MASTER_GAS_URL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'sendEmail', email: m.email, subject: `[ĐTN] Đôn đốc tiến độ: ${t.title}`, body: `Chào đồng chí ${m.name},\nBan Chấp hành gửi nhắc nhở nhiệm vụ:\n- Tên: ${t.title}\n- Hạn chót: ${t.deadline||'Không'}\n- Trạng thái: ${getStatusBadge(t.status).replace(/<[^>]*>?/gm, '')}\n\nĐề nghị hoàn thành đúng hạn.\nTrân trọng.`}) 
+            })
+            .then(() => Swal.fire('Thành công!', `Đã nhắc nhở ${m.email}`, 'success')).catch(() => Swal.fire('Lỗi','Server không phản hồi','error'));
         }
 
-        function deleteTask(id) { Swal.fire({ title: 'Xóa nhiệm vụ này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => { if (res.isConfirmed) { AppState.tasks = AppState.tasks.filter(t => t.id !== id); saveData(); renderTasks(); } }); }
-        function quickUpdateStatus(id, newStatus) { const t = AppState.tasks.find(x => x.id === id); if (t) { t.status = newStatus; saveData(); renderTasks(); } }
-        function quickComplete(id) { const t = AppState.tasks.find(x => x.id === id); if (t) { t.status = 'DONE'; saveData(); renderDashboard(); } }
+        // 3. PROJECTS
+        function renderProjects() { document.getElementById('projects-list-container').innerHTML = AppState.projects.map(p => { const ts = AppState.tasks.filter(t=>t.projectId===p.id); const done = ts.filter(t=>t.status==='DONE').length; const pct = ts.length ? Math.round((done/ts.length)*100) : 0; return `<div class="col-12 col-md-6 col-lg-4"><div class="card card-custom p-3 h-100"><div class="d-flex justify-content-between mb-3"><div class="d-flex align-items-center gap-2"><span class="p-2 rounded-circle" style="background:${p.color}"></span><h6 class="fw-bold m-0">${p.name}</h6></div><div><button class="btn btn-sm text-muted" onclick="openProjectModal('${p.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm text-danger" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button></div></div>${p.attachment?`<div class="mb-2"><a href="${p.attachment}" target="_blank" class="btn btn-sm btn-outline-teal w-100"><i class="fa-solid fa-file-arrow-down me-1"></i>Tài liệu đính kèm</a></div>`:'<small class="text-muted d-block mb-2">Không có giấy tờ</small>'}<small class="text-muted d-block mb-1">Tiến độ: ${done}/${ts.length} (${pct}%)</small><div class="progress mt-auto" style="height: 8px;"><div class="progress-bar" style="width: ${pct}%; background:${p.color}"></div></div></div></div>`; }).join(''); }
+        function openProjectModal(id=null) { document.getElementById('project-form').reset(); if(id) { const p = AppState.projects.find(x=>x.id===id); document.getElementById('projectModalTitle').textContent = 'Sửa Chương Trình'; document.getElementById('project-id').value=p.id; document.getElementById('project-name').value=p.name; document.getElementById('project-color').value=p.color; document.getElementById('project-attachment').value=p.attachment||''; } else { document.getElementById('projectModalTitle').textContent = 'Tạo Mới'; document.getElementById('project-id').value=''; } modalObjs.project.show(); }
+        function saveProject() { const id = document.getElementById('project-id').value, name = document.getElementById('project-name').value.trim(); if(!name) return; const payload = {name, color: document.getElementById('project-color').value, attachment: document.getElementById('project-attachment').value.trim()}; if(id) Object.assign(AppState.projects.find(x=>x.id===id), payload); else AppState.projects.push({id: 'proj-'+Date.now(), ...payload}); saveData(); populateDropdowns(); modalObjs.project.hide(); renderProjects(); }
+        function deleteProject(id) { Swal.fire({title: 'Xóa?', text:'Xóa chương trình sẽ làm mồ côi các Nhiệm vụ liên quan!', icon: 'warning', showCancelButton: true}).then(r => { if(r.isConfirmed) { AppState.projects = AppState.projects.filter(p=>p.id!==id); AppState.tasks = AppState.tasks.filter(t=>t.projectId!==id); AppState.reports = AppState.reports.filter(r=>r.projectId!==id); saveData(); populateDropdowns(); renderProjects(); }}); }
 
-        // --- CALENDAR ---
-        function openCalendarModal(eventId = null, defaultDate = '') {
-            populateDropdowns(); document.getElementById('calendar-event-form').reset();
-            if (eventId) {
-                const ev = AppState.calendarEvents.find(x => x.id === eventId);
-                if (ev) {
-                    document.getElementById('calendarModalTitle').textContent = 'Chỉnh Sửa Lịch Công Tác';
-                    document.getElementById('cal-event-id').value = ev.id;
-                    document.getElementById('cal-event-title').value = ev.title;
-                    document.getElementById('cal-event-date').value = ev.date ? String(ev.date).split('T')[0] : '';
-                    document.getElementById('cal-event-time').value = ev.time || '';
-                    document.getElementById('cal-event-location').value = ev.location || '';
-                    document.getElementById('cal-event-member').value = ev.memberId || '';
-                    document.getElementById('cal-event-desc').value = ev.desc || '';
-                }
-            } else {
-                document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch Công Tác';
-                document.getElementById('cal-event-id').value = '';
-                document.getElementById('cal-event-date').value = defaultDate ? defaultDate.split('T')[0] : new Date().toISOString().split('T')[0];
-            }
-            calendarModalObj.show();
-        }
+        // 4. MEMBERS
+        function renderMembers() { document.getElementById('members-table-body').innerHTML = AppState.members.map(m => { const as = AppState.tasks.filter(t=>t.memberId===m.id); const ds = as.filter(t=>t.status==='DONE').length; return `<tr><td class="fw-semibold"><i class="fa-solid fa-user-graduate text-teal me-2"></i>${m.name}</td><td><span class="badge bg-light text-dark border">${m.role||'Đoàn viên'}</span></td><td>${m.phone||'N/A'}</td><td><a href="mailto:${m.email}" class="text-decoration-none">${m.email}</a></td><td><span class="badge bg-primary">${as.length} NV</span> (${ds} xong)</td><td class="text-end"><button class="btn btn-sm btn-outline-teal me-1" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteMember('${m.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join(''); }
+        function openMemberModal(id=null) { document.getElementById('member-form').reset(); if(id) { const m = AppState.members.find(x=>x.id===id); document.getElementById('memberModalTitle').textContent = 'Sửa Cán Bộ'; document.getElementById('member-id').value=m.id; document.getElementById('member-name').value=m.name; document.getElementById('member-role').value=m.role||''; document.getElementById('member-phone').value=m.phone||''; document.getElementById('member-email').value=m.email||''; } else { document.getElementById('memberModalTitle').textContent = 'Thêm Cán Bộ'; document.getElementById('member-id').value=''; } modalObjs.member.show(); }
+        function saveMember() { const id = document.getElementById('member-id').value, name = document.getElementById('member-name').value.trim(), email = document.getElementById('member-email').value.trim(); if(!name || !email) { Swal.fire('Lỗi','Nhập tên & email','error'); return; } const payload = {name, role: document.getElementById('member-role').value, phone: document.getElementById('member-phone').value, email}; if(id) Object.assign(AppState.members.find(x=>x.id===id), payload); else AppState.members.push({id: 'mem-'+Date.now(), ...payload}); saveData(); populateDropdowns(); modalObjs.member.hide(); renderMembers(); }
+        function deleteMember(id) { Swal.fire({title: 'Xóa Cán Bộ?', icon: 'warning', showCancelButton: true}).then(r => { if(r.isConfirmed) { AppState.members = AppState.members.filter(m=>m.id!==id); AppState.tasks.forEach(t=>{if(t.memberId===id) t.memberId = null;}); saveData(); populateDropdowns(); renderMembers(); }}); }
 
-        function saveCalendarEvent() {
-            const id = document.getElementById('cal-event-id').value;
-            const title = document.getElementById('cal-event-title').value.trim();
-            const dateVal = document.getElementById('cal-event-date').value;
-            if (!title || !dateVal) return;
-            const payload = { title, date: dateVal.split('T')[0], time: document.getElementById('cal-event-time').value.trim(), location: document.getElementById('cal-event-location').value.trim(), memberId: document.getElementById('cal-event-member').value, desc: document.getElementById('cal-event-desc').value.trim() };
-            if (id) { Object.assign(AppState.calendarEvents.find(x => x.id === id), payload); } else { AppState.calendarEvents.push({ id: 'cal-' + Date.now(), ...payload }); }
-            saveData(); calendarModalObj.hide(); renderCalendar();
-        }
+        // 5. REPORTS
+        function renderReports() { document.getElementById('reports-list-container').innerHTML = AppState.reports.map(r => { const p = AppState.projects.find(x=>x.id===r.projectId)||{name:''}; return `<div class="col-12"><div class="card card-custom p-4"><div class="d-flex justify-content-between mb-2"><h6 class="fw-bold m-0 text-teal"><i class="fa-solid fa-flag me-2"></i>CT: ${p.name}</h6><div><span class="badge bg-success me-2">XL: ${r.rating}</span><button class="btn btn-sm btn-outline-danger" onclick="deleteReport('${r.id}')"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-secondary mb-2"><strong>Nhận xét:</strong> ${r.content}</p><small class="text-muted"><i class="fa-solid fa-calendar me-1"></i>${r.date}</small></div></div>`; }).join('') || '<div class="text-center w-100 text-muted my-4">Chưa có đánh giá nào.</div>'; }
+        function openReportModal() { populateDropdowns(); document.getElementById('report-form').reset(); document.getElementById('report-id').value=''; modalObjs.report.show(); }
+        function saveReport() { const id = document.getElementById('report-id').value, c = document.getElementById('report-content').value.trim(); if(!c) return; AppState.reports.unshift({id: 'rep-'+Date.now(), projectId: document.getElementById('report-project').value, rating: document.getElementById('report-rating').value, content: c, date: new Date().toISOString().split('T')[0]}); saveData(); modalObjs.report.hide(); renderReports(); }
+        function deleteReport(id) { AppState.reports = AppState.reports.filter(r=>r.id!==id); saveData(); renderReports(); }
 
-        function deleteCalendarEvent(id) { Swal.fire({ title: 'Xóa lịch này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => { if (res.isConfirmed) { AppState.calendarEvents = AppState.calendarEvents.filter(x => x.id !== id); saveData(); renderCalendar(); } }); }
-        function changeWeek(direction) { calendarStartDate.setDate(calendarStartDate.getDate() + (direction * 7)); renderCalendar(); }
+        // 6. CALENDAR
+        function changeWeek(dir) { calendarStartDate.setDate(calendarStartDate.getDate() + (dir * 7)); renderCalendar(); }
         function resetCalendarToToday() { calendarStartDate = new Date(); renderCalendar(); }
-        function jumpToSelectedDate(dateVal) { if (!dateVal) return; calendarStartDate = new Date(dateVal); renderCalendar(); }
-
+        function jumpToSelectedDate(v) { if(v) { calendarStartDate = new Date(v); renderCalendar(); } }
         function renderCalendar() {
             const grid = document.getElementById('weekly-calendar-grid'); grid.innerHTML = '';
-            const curr = new Date(calendarStartDate);
-            const day = curr.getDay(); const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
-            const monday = new Date(curr.setDate(diff));
-            const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
-            
-            document.getElementById('calendar-week-label').textContent = `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
+            const curr = new Date(calendarStartDate); const day = curr.getDay(); const diff = curr.getDate() - day + (day===0 ? -6 : 1); 
+            const monday = new Date(curr.setDate(diff)); const sunday = new Date(monday); sunday.setDate(monday.getDate()+6);
+            document.getElementById('calendar-week-label').textContent = `Tuần: ${monday.toLocaleDateString('vi-VN')} - ${sunday.toLocaleDateString('vi-VN')}`;
             document.getElementById('calendar-jump-picker').value = monday.toISOString().split('T')[0];
-            const todayStr = new Date().toISOString().split('T')[0];
-            const dayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
-
-            if(!AppState.calendarEvents) AppState.calendarEvents = [];
-
+            const todayStr = new Date().toISOString().split('T')[0], dayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
+            if(!AppState.calendarEvents) AppState.calendarEvents=[];
+            
             for (let i = 0; i < 7; i++) {
-                const d = new Date(monday); d.setDate(monday.getDate() + i);
-                const dStr = d.toISOString().split('T')[0];
-                
-                const dayEvents = AppState.calendarEvents.filter(e => e.date && String(e.date).split('T')[0] === dStr);
-                const dayTasks = AppState.tasks.filter(t => t.deadline && String(t.deadline).split('T')[0] === dStr);
+                const d = new Date(monday); d.setDate(monday.getDate() + i); const dStr = d.toISOString().split('T')[0];
+                const dEvs = AppState.calendarEvents.filter(e => e.date===dStr), dTasks = AppState.tasks.filter(t => t.deadline===dStr);
                 const isToday = dStr === todayStr;
-
-                let htmlContent = '';
-                dayEvents.forEach(ev => {
-                    const m = AppState.members.find(x => x.id === ev.memberId) || {name: 'Chưa phân công'};
-                    htmlContent += `
-                        <div class="calendar-event-card position-relative">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time || 'Cả ngày'}</span>
-                                <div class="dropdown"><button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;"><li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li><li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li></ul></div>
-                            </div>
-                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>
-                            ${ev.location ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>` : ''}
-                            <div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
-                        </div>`;
-                });
-
-                dayTasks.forEach(t => {
-                    const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công'};
-                    const p = AppState.projects.find(x => x.id === t.projectId) || {name: ''};
-                    htmlContent += `
-                        <div class="calendar-task-card position-relative" onclick="openTaskModal('${t.id}')" title="Bấm để xem/sửa nhiệm vụ">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span class="badge badge-priority-${t.priority}" style="font-size: 9px;">${getPriorityLabel(t.priority)}</span>
-                                <span class="text-primary fw-semibold" style="font-size: 9px;"><i class="fa-solid fa-list-check me-1"></i>Deadline NV</span>
-                            </div>
-                            <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${t.title}</div>
-                            ${p.name ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder me-1"></i>${p.name}</div>` : ''}
-                            <div class="text-primary" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
-                        </div>`;
-                });
-
-                if (!htmlContent) { htmlContent = `<div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;"><i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch</div>`; }
-
-                grid.innerHTML += `
-                    <div class="col-12 col-md">
-                        <div class="calendar-day-col shadow-sm ${isToday ? 'border-teal border-2' : ''}">
-                            <div class="calendar-day-header" style="${isToday ? 'background-color: var(--teal-primary); color: white; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;' : ''}">
-                                <div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div><div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
-                            </div>
-                            <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">${htmlContent}</div>
-                            <div class="p-2 border-top bg-light text-center"><button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')"><i class="fa-solid fa-plus me-1"></i>Thêm lịch</button></div>
-                        </div>
-                    </div>`;
+                let html = '';
+                dEvs.forEach(ev => { const m = AppState.members.find(x=>x.id===ev.memberId)||{name:'Chưa xếp'}; html += `<div class="calendar-event-card position-relative"><div class="d-flex justify-content-between mb-1"><span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time||'Cả ngày'}</span><div class="dropdown"><button class="btn btn-sm text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;"><li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa</a></li><li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa</a></li></ul></div></div><div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>${ev.location?`<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>`:''}<div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div></div>`; });
+                dTasks.forEach(t => { const m = AppState.members.find(x=>x.id===t.memberId)||{name:'N/A'}, p = AppState.projects.find(x=>x.id===t.projectId)||{name:''}; html += `<div class="calendar-task-card position-relative" onclick="openTaskModal('${t.id}')"><div class="d-flex justify-content-between mb-1"><span class="badge badge-priority-${t.priority}" style="font-size: 9px;">${getPriorityLabel(t.priority)}</span><span class="text-primary fw-semibold" style="font-size: 9px;"><i class="fa-solid fa-list-check me-1"></i>Hạn chót</span></div><div class="fw-bold text-dark mb-1" style="font-size: 12px;">${t.title}</div>${p.name?`<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder me-1"></i>${p.name}</div>`:''}<div class="text-primary" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div></div>`; });
+                if(!html) html = `<div class="text-center text-muted py-5" style="font-size: 11px; opacity: 0.6;"><i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Trống</div>`;
+                grid.innerHTML += `<div class="col-12 col-md"><div class="calendar-day-col shadow-sm ${isToday?'border-teal border-2':''}"><div class="calendar-day-header" style="${isToday?'background-color: var(--teal-primary); color: white; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;':''}"><div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div><div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div></div><div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">${html}</div><div class="p-2 border-top bg-light text-center"><button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')"><i class="fa-solid fa-plus me-1"></i>Thêm lịch</button></div></div></div>`;
             }
         }
+        function openCalendarModal(id=null, d='') { populateDropdowns(); document.getElementById('calendar-event-form').reset(); if(id) { const ev = AppState.calendarEvents.find(x=>x.id===id); document.getElementById('calendarModalTitle').textContent = 'Sửa Lịch'; document.getElementById('cal-event-id').value=ev.id; document.getElementById('cal-event-title').value=ev.title; document.getElementById('cal-event-date').value=ev.date; document.getElementById('cal-event-time').value=ev.time||''; document.getElementById('cal-event-location').value=ev.location||''; document.getElementById('cal-event-member').value=ev.memberId||''; document.getElementById('cal-event-desc').value=ev.desc||''; } else { document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch'; document.getElementById('cal-event-id').value=''; document.getElementById('cal-event-date').value = d||new Date().toISOString().split('T')[0]; } modalObjs.calendar.show(); }
+        function saveCalendarEvent() { const id = document.getElementById('cal-event-id').value, title = document.getElementById('cal-event-title').value.trim(), date = document.getElementById('cal-event-date').value; if(!title||!date) return; const payload = {title, date, time: document.getElementById('cal-event-time').value.trim(), location: document.getElementById('cal-event-location').value.trim(), memberId: document.getElementById('cal-event-member').value, desc: document.getElementById('cal-event-desc').value.trim()}; if(id) Object.assign(AppState.calendarEvents.find(x=>x.id===id), payload); else AppState.calendarEvents.push({id: 'cal-'+Date.now(), ...payload}); saveData(); modalObjs.calendar.hide(); renderCalendar(); }
+        function deleteCalendarEvent(id) { Swal.fire({title: 'Xóa lịch?', icon: 'warning', showCancelButton: true}).then(r => { if(r.isConfirmed) { AppState.calendarEvents = AppState.calendarEvents.filter(x=>x.id!==id); saveData(); renderCalendar(); }}); }
 
-        // --- PROJECTS ---
-        function renderProjects() {
-            document.getElementById('projects-list-container').innerHTML = AppState.projects.map(p => {
-                const ts = AppState.tasks.filter(t => t.projectId === p.id);
-                const done = ts.filter(t => t.status === 'DONE').length; const pct = ts.length ? Math.round((done / ts.length) * 100) : 0;
-                return `
-                    <div class="col-12 col-md-6 col-lg-4"><div class="card card-custom p-3 h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="d-flex align-items-center gap-2"><span class="p-2 rounded-circle" style="background:${p.color}"></span><h6 class="fw-bold m-0">${p.name}</h6></div>
-                            <div><button class="btn btn-sm btn-link text-muted" onclick="openProjectModal('${p.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-link text-danger" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button></div>
-                        </div>
-                        ${p.attachment ? `<div class="mb-2"><a href="${p.attachment}" target="_blank" class="btn btn-sm btn-outline-teal w-100"><i class="fa-solid fa-file-arrow-down me-1"></i>Giấy tờ kèm theo</a></div>` : '<small class="text-muted d-block mb-2">Chưa có giấy tờ đính kèm</small>'}
-                        <small class="text-muted d-block mb-1">Hoàn thành: ${done}/${ts.length} (${pct}%)</small>
-                        <div class="progress mt-auto" style="height: 8px;"><div class="progress-bar" style="width: ${pct}%; background:${p.color}"></div></div>
-                    </div></div>`;
-            }).join('');
-        }
-        function openProjectModal(id = null) {
-            document.getElementById('project-form').reset();
-            if (id) { const p = AppState.projects.find(x => x.id === id); document.getElementById('projectModalTitle').textContent = 'Sửa Chương Trình'; document.getElementById('project-id').value = p.id; document.getElementById('project-name').value = p.name; document.getElementById('project-color').value = p.color; document.getElementById('project-attachment').value = p.attachment || ''; } else { document.getElementById('projectModalTitle').textContent = 'Tạo Mới'; document.getElementById('project-id').value = ''; }
-            projectModalObj.show();
-        }
-        function saveProject() {
-            const id = document.getElementById('project-id').value; const name = document.getElementById('project-name').value.trim();
-            if (!name) return;
-            const payload = { name, color: document.getElementById('project-color').value, attachment: document.getElementById('project-attachment').value.trim() };
-            if (id) { Object.assign(AppState.projects.find(x => x.id === id), payload); } else { AppState.projects.push({ id: 'proj-' + Date.now(), ...payload }); }
-            saveData(); populateDropdowns(); projectModalObj.hide(); renderProjects();
-        }
-        function deleteProject(id) { Swal.fire({ title: 'Xóa chương trình?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => { if (r.isConfirmed) { AppState.projects = AppState.projects.filter(p => p.id !== id); AppState.tasks = AppState.tasks.filter(t => t.projectId !== id); AppState.reports = AppState.reports.filter(r => r.projectId !== id); saveData(); populateDropdowns(); renderProjects(); } }); }
-
-        // --- MEMBERS & REPORTS & EXPORT ---
-        function renderMembers() {
-            document.getElementById('members-table-body').innerHTML = AppState.members.map(m => {
-                const as = AppState.tasks.filter(t => t.memberId === m.id); const ds = as.filter(t => t.status === 'DONE').length;
-                return `<tr><td class="fw-semibold"><i class="fa-solid fa-user-graduate text-teal me-2"></i>${m.name}</td><td><span class="badge bg-light text-dark border">${m.role || 'Đoàn viên'}</span></td><td>${m.phone || 'N/A'}</td><td><a href="mailto:${m.email}" class="text-decoration-none">${m.email}</a></td><td><span class="badge bg-primary">${as.length} nhiệm vụ</span></td><td class="text-end"><button class="btn btn-sm btn-outline-teal me-1" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteMember('${m.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-            }).join('');
-        }
-        function openMemberModal(id = null) { document.getElementById('member-form').reset(); if (id) { const m = AppState.members.find(x => x.id === id); document.getElementById('memberModalTitle').textContent = 'Sửa Đoàn Viên'; document.getElementById('member-id').value = m.id; document.getElementById('member-name').value = m.name; document.getElementById('member-role').value = m.role || ''; document.getElementById('member-phone').value = m.phone || ''; document.getElementById('member-email').value = m.email || ''; } else { document.getElementById('memberModalTitle').textContent = 'Thêm Đoàn Viên'; document.getElementById('member-id').value = ''; } memberModalObj.show(); }
-        function saveMember() { const id = document.getElementById('member-id').value; const name = document.getElementById('member-name').value.trim(); const email = document.getElementById('member-email').value.trim(); if (!name || !email) return; const payload = { name, role: document.getElementById('member-role').value.trim(), phone: document.getElementById('member-phone').value.trim(), email }; if (id) { Object.assign(AppState.members.find(x => x.id === id), payload); } else { AppState.members.push({ id: 'mem-' + Date.now(), ...payload }); } saveData(); populateDropdowns(); memberModalObj.hide(); renderMembers(); }
-        function deleteMember(id) { Swal.fire({ title: 'Xóa đoàn viên?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => { if (r.isConfirmed) { AppState.members = AppState.members.filter(m => m.id !== id); AppState.tasks.forEach(t => { if (t.memberId === id) t.memberId = null; }); saveData(); populateDropdowns(); renderMembers(); } }); }
-        function renderReports() { document.getElementById('reports-list-container').innerHTML = AppState.reports.map(r => { const p = AppState.projects.find(x => x.id === r.projectId) || {name: ''}; return `<div class="col-12"><div class="card card-custom p-4"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold m-0 text-teal"><i class="fa-solid fa-flag me-2"></i>Chương trình: ${p.name}</h6><div><span class="badge bg-success me-2">Xếp loại: ${r.rating}</span><button class="btn btn-sm btn-outline-danger" onclick="deleteReport('${r.id}')"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-secondary mb-2"><strong>Nhận xét:</strong> ${r.content}</p><small class="text-muted"><i class="fa-solid fa-calendar me-1"></i>Ngày đánh giá: ${r.date}</small></div></div>`; }).join('') || '<div class="col-12 text-center text-muted py-4">Chưa có bản nhận xét nào.</div>'; }
-        function openReportModal() { populateDropdowns(); document.getElementById('report-form').reset(); document.getElementById('report-id').value = ''; reportModalObj.show(); }
-        function saveReport() { const content = document.getElementById('report-content').value.trim(); if (!content) return; AppState.reports.unshift({ id: 'rep-' + Date.now(), projectId: document.getElementById('report-project').value, rating: document.getElementById('report-rating').value, content, date: new Date().toISOString().split('T')[0] }); saveData(); reportModalObj.hide(); renderReports(); }
-        function deleteReport(id) { AppState.reports = AppState.reports.filter(r => r.id !== id); saveData(); renderReports(); }
-
+        // 7. EXPORT
         function exportToWordDoc() {
-            let ht = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Báo Cáo</title><style>body { font-family: 'Times New Roman', Times, serif; font-size: 14pt; line-height: 1.5; color: #000; margin: 2cm; } .header { text-align: center; font-weight: bold; margin-bottom: 20px; } .title { text-align: center; font-weight: bold; font-size: 16pt; margin: 20px 0; text-transform: uppercase; } table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; } th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 13pt; } th { background-color: #f2f2f2; text-align: center; } .section-title { font-weight: bold; font-size: 14pt; margin-top: 20px; text-decoration: underline; }</style></head><body><div class="header">ĐOÀN TNCS HỒ CHÍ MINH<br><strong>ĐTN THPT NGUYỄN VĂN CHẤT</strong><hr style="width: 200px; margin: 5px auto;"></div><div class="title">BÁO CÁO TỔNG HỢP CÔNG TÁC ĐOÀN VÀ PHONG TRÀO THANH NIÊN</div><p><strong>Cán bộ báo cáo:</strong> ${AppState.user.name}</p><p><strong>Ngày lập báo cáo:</strong> ${new Date().toLocaleDateString('vi-VN')}</p><div class="section-title">I. DANH SÁCH NHIỆM VỤ</div><table><tr><th>STT</th><th>Tên Nhiệm Vụ</th><th>Đoàn Viên (Gmail)</th><th>Trạng Thái</th><th>Hạn Chót</th></tr>`;
-            AppState.tasks.forEach((t, i) => { const m = AppState.members.find(x => x.id === t.memberId) || {name: '', email: ''}; ht += `<tr><td style="text-align: center;">${i + 1}</td><td>${t.title}</td><td>${m.name} (${m.email})</td><td style="text-align: center;">${getStatusLabel(t.status)}</td><td style="text-align: center;">${t.deadline ? String(t.deadline).split('T')[0] : ''}</td></tr>`; });
+            let ht = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Báo Cáo</title><style>body { font-family: 'Times New Roman', Times, serif; font-size: 14pt; line-height: 1.5; color: #000; margin: 2cm; } .header { text-align: center; font-weight: bold; margin-bottom: 20px; } .title { text-align: center; font-weight: bold; font-size: 16pt; margin: 20px 0; text-transform: uppercase; } table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; } th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 13pt; } th { background-color: #f2f2f2; text-align: center; } .section-title { font-weight: bold; font-size: 14pt; margin-top: 20px; text-decoration: underline; }</style></head><body><div class="header">ĐOÀN TNCS HỒ CHÍ MINH<br><strong>ĐTN THPT NGUYỄN VĂN CHẤT</strong><hr style="width: 200px; margin: 5px auto;"></div><div class="title">BÁO CÁO TỔNG HỢP CÔNG TÁC ĐOÀN VÀ PHONG TRÀO THANH NIÊN</div><p><strong>Cán bộ báo cáo:</strong> ${AppState.user.name}</p><p><strong>Đơn vị:</strong> ${AppState.user.title}</p><p><strong>Ngày lập báo cáo:</strong> ${new Date().toLocaleDateString('vi-VN')}</p><div class="section-title">I. DANH SÁCH NHIỆM VỤ ĐÃ GIAO</div><table><tr><th>STT</th><th>Tên Nhiệm Vụ</th><th>Chương Trình</th><th>Đoàn Viên Phụ Trách</th><th>Trạng Thái</th><th>Hạn Chót</th></tr>`;
+            AppState.tasks.forEach((t, i) => { const p = AppState.projects.find(x=>x.id===t.projectId)||{name:''}, m = AppState.members.find(x=>x.id===t.memberId)||{name:'', email:''}; ht += `<tr><td style="text-align: center;">${i + 1}</td><td>${t.title}</td><td>${p.name}</td><td>${m.name} (${m.email})</td><td style="text-align: center;">${getStatusBadge(t.status).replace(/<[^>]*>?/gm, '')}</td><td style="text-align: center;">${t.deadline||''}</td></tr>`; });
             ht += `</table><div class="section-title">II. ĐÁNH GIÁ CHƯƠNG TRÌNH</div>`;
-            AppState.reports.forEach((r, i) => { const p = AppState.projects.find(x => x.id === r.projectId) || {name: ''}; ht += `<p><strong>${i + 1}. ${p.name} (Xếp loại: ${r.rating})</strong><br><em>Nhận xét:</em> ${r.content}</p>`; });
+            AppState.reports.forEach((r, i) => { const p = AppState.projects.find(x=>x.id===r.projectId)||{name:''}; ht += `<p><strong>${i + 1}. Chương trình: ${p.name} (Xếp loại: ${r.rating})</strong><br><em>Nhận xét:</em> ${r.content}</p>`; });
             ht += `<table style="border: none; margin-top: 40px;"><tr style="border: none;"><td style="border: none; text-align: center; width: 50%;"><strong>TM. BAN CHẤP HÀNH</strong><br><br><br><br><strong>${AppState.user.name}</strong></td><td style="border: none; text-align: center; width: 50%;"><strong>NGƯỜI LẬP BÁO CÁO</strong><br><br><br><br><strong>${AppState.user.name}</strong></td></tr></table></body></html>`;
             const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + ht], { type: 'application/msword' })); a.download = `Bao_Cao_Doan_${new Date().toISOString().split('T')[0]}.doc`; a.click();
         }
-
         function exportToExcel() {
-            const data = AppState.tasks.map(t => ({ 'Tên Nhiệm Vụ': t.title, 'Chương Trình': (AppState.projects.find(p => p.id === t.projectId) || {}).name || '', 'Đoàn Viên Phụ Trách': (AppState.members.find(m => m.id === t.memberId) || {}).name || '', 'Mức Độ': getPriorityLabel(t.priority), 'Trạng Thái': getStatusLabel(t.status), 'Deadline': t.deadline ? String(t.deadline).split('T')[0] : '' }));
-            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "NhiemVuDoan"); XLSX.writeFile(wb, "ThongKe.xlsx");
+            const data = AppState.tasks.map(t => ({ 'Nhiệm Vụ': t.title, 'Chương Trình': (AppState.projects.find(p=>p.id===t.projectId)||{}).name||'', 'Cán Bộ Phụ Trách': (AppState.members.find(m=>m.id===t.memberId)||{}).name||'', 'Gmail': (AppState.members.find(m=>m.id===t.memberId)||{}).email||'', 'Mức Độ': getPriorityLabel(t.priority), 'Trạng Thái': getStatusBadge(t.status).replace(/<[^>]*>?/gm, ''), 'Deadline': t.deadline||'', 'Ghi Chú': t.desc||'' }));
+            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "NhiemVuDoan"); XLSX.writeFile(wb, "ThongKe_DoanTN.xlsx");
         }
-
-        function handleAvatarUpload(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(evt) { AppState.user.avatar = evt.target.result; document.getElementById('settings-avatar-preview').src = AppState.user.avatar; updateUserProfileUI(); }; reader.readAsDataURL(file); }
-        function updateUserProfileUI() { document.getElementById('topbar-unit-name').textContent = AppState.user.title; if(AppState.user.avatar) { document.getElementById('topbar-avatar').src = AppState.user.avatar; document.getElementById('settings-avatar-preview').src = AppState.user.avatar; } document.getElementById('setting-user-name').value = AppState.user.name; document.getElementById('setting-user-title').value = AppState.user.title; }
-        
-        function saveUserSettings(e) { e.preventDefault(); const gasUrl = document.getElementById('setting-gas-url').value.trim(); localStorage.setItem('TealYouth_GAS_URL', gasUrl); AppState.user.name = document.getElementById('setting-user-name').value; AppState.user.title = document.getElementById('setting-user-title').value; saveData(); updateUserProfileUI(); Swal.fire('Thành công', 'Đã lưu cấu hình!', 'success'); }
-        
-        function populateDropdowns() {
-            const projOpts = AppState.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            const memOpts = `<option value="">-- Chọn đoàn viên phụ trách --</option>` + AppState.members.map(m => `<option value="${m.id}">${m.name} (${m.email})</option>`).join('');
-            document.getElementById('task-project').innerHTML = projOpts; document.getElementById('task-member').innerHTML = memOpts; document.getElementById('report-project').innerHTML = projOpts; document.getElementById('cal-event-member').innerHTML = memOpts;
-        }
-
-        function filterByPeriod(tasks) {
-            if (quickPeriodFilter === 'ALL') return tasks; const now = new Date();
-            return tasks.filter(t => { if (!t.deadline) return false; const d = new Date(t.deadline);
-                if (quickPeriodFilter === 'WEEK') { const firstDay = new Date(now.setDate(now.getDate() - now.getDay())); const lastDay = new Date(now.setDate(now.getDate() + 6)); return d >= firstDay && d <= lastDay; }
-                if (quickPeriodFilter === 'MONTH') { return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }
-                if (quickPeriodFilter === 'SEMESTER') { const semMatch = (now.getMonth() + 1) <= 6 ? (d.getMonth() + 1 <= 6) : (d.getMonth() + 1 > 6); return semMatch && d.getFullYear() === now.getFullYear(); } return true;
-            });
-        }
-
-        function isOverdue(t) { if (!t.deadline || t.status === 'DONE') return false; return String(t.deadline).split('T')[0] < new Date().toISOString().split('T')[0]; }
-        function getPriorityLabel(p) { return { Urgent: 'Đặc biệt gấp', High: 'Quan trọng', Medium: 'Thường xuyên', Low: 'Thông tin' }[p] || p; }
-        function getStatusLabel(s) { return { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', REVIEW: 'Nghiệm thu', DONE: 'Hoàn thành' }[s] || s; }
-        function getStatusBadge(s) { return { TODO: '<span class="badge bg-secondary">Cần làm</span>', IN_PROGRESS: '<span class="badge bg-primary">Đang làm</span>', REVIEW: '<span class="badge bg-warning text-dark">Nghiệm thu</span>', DONE: '<span class="badge bg-success">Hoàn thành</span>' }[s] || s; }
     </script>
 </body>
 </html>
