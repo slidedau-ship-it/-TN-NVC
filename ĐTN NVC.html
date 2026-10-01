@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ĐTN THPT Nguyễn Văn Chất - Quản Lý Hoạt Động & Lịch Công Tác</title>
-
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6.4.0 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- CSS Custom Theme Teal -->
     <style>
         :root {
@@ -26,228 +24,34 @@
             --bg-canvas: #f8fafc;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-canvas);
-            color: #334155;
-            overflow-x: hidden;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-canvas); color: #334155; overflow-x: hidden; }
+        #app-sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; top: 0; left: 0; background: linear-gradient(180deg, #0f3836 0%, #0d9488 100%); color: #ffffff; z-index: 1040; transition: all 0.3s ease; box-shadow: 4px 0 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        #app-topbar { position: fixed; top: 0; right: 0; left: var(--sidebar-width); height: var(--topbar-height); background: #ffffff; border-bottom: 1px solid #e2e8f0; z-index: 1030; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; }
+        #app-content { margin-left: var(--sidebar-width); margin-top: var(--topbar-height); padding: 1.75rem; min-height: calc(100vh - var(--topbar-height)); transition: all 0.3s ease; }
+        .sidebar-brand { padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-size: 1.05rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-brand i { background: rgba(255,255,255,0.2); padding: 0.5rem; border-radius: 0.5rem; color: #2dd4bf; }
+        .sidebar-nav { padding: 1rem 0.75rem; flex-grow: 1; overflow-y: auto; }
+        .nav-link-custom { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 1rem; color: rgba(255,255,255,0.8); border-radius: 0.6rem; font-weight: 500; text-decoration: none; transition: all 0.2s ease; margin-bottom: 0.25rem; cursor: pointer; }
+        .nav-link-custom:hover, .nav-link-custom.active { color: #ffffff; background: rgba(255,255,255,0.22); font-weight: 600; }
+        .save-pill { font-size: 0.8rem; padding: 0.35rem 0.75rem; border-radius: 50rem; background-color: var(--teal-subtle); color: var(--teal-dark); font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
+        .card-custom { background: #ffffff; border-radius: 0.85rem; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .stat-card { padding: 1.25rem; border-radius: 1rem; border: 0; color: #ffffff; position: relative; overflow: hidden; }
+        .stat-icon { position: absolute; right: 1rem; bottom: 0.75rem; font-size: 2.75rem; opacity: 0.2; }
+        .kanban-col { background: #f1f5f9; border-radius: 0.85rem; padding: 1rem; min-height: 550px; border: 1px solid #e2e8f0; }
+        .kanban-header { font-weight: 700; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
+        .kanban-card { background: #ffffff; border-radius: 0.65rem; padding: 1rem; margin-bottom: 0.85rem; border: 1px solid #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease; }
+        .kanban-card:hover { border-color: var(--teal-primary); box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12); }
+        .badge-priority-Urgent { background-color: #ef4444; color: white; } .badge-priority-High { background-color: #f97316; color: white; } .badge-priority-Medium { background-color: #3b82f6; color: white; } .badge-priority-Low { background-color: #64748b; color: white; }
+        .btn-teal { background-color: var(--teal-primary); color: white; } .btn-teal:hover { background-color: var(--teal-primary-hover); color: white; } .btn-outline-teal { color: var(--teal-primary); border-color: var(--teal-primary); } .btn-outline-teal:hover, .btn-outline-teal.active { background-color: var(--teal-primary); color: white; }
+        
+        .calendar-day-col { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; min-height: 500px; display: flex; flex-direction: column; transition: all 0.2s; }
+        .calendar-day-col:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: var(--teal-border); }
+        .calendar-day-header { padding: 0.75rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; font-weight: 700; text-align: center; }
+        .calendar-event-card { background: #f0fdf4; border-left: 3px solid var(--teal-primary); padding: 0.6rem; border-radius: 0.35rem; margin-bottom: 0.5rem; font-size: 0.8rem; cursor: pointer; transition: transform 0.1s; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+        .calendar-event-card:hover { transform: translateY(-1px); background: var(--teal-subtle); }
+        .calendar-task-card { background: #eff6ff; border-left: 3px solid #3b82f6; padding: 0.6rem; border-radius: 0.35rem; margin-bottom: 0.5rem; font-size: 0.8rem; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
 
-        #app-sidebar {
-            width: var(--sidebar-width);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: linear-gradient(180deg, #0f3836 0%, #0d9488 100%);
-            color: #ffffff;
-            z-index: 1040;
-            transition: all 0.3s ease;
-            box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        #app-topbar {
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: var(--sidebar-width);
-            height: var(--topbar-height);
-            background: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            z-index: 1030;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-        }
-
-        #app-content {
-            margin-left: var(--sidebar-width);
-            margin-top: var(--topbar-height);
-            padding: 1.75rem;
-            min-height: calc(100vh - var(--topbar-height));
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-brand {
-            padding: 1.25rem 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.05rem;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar-brand i {
-            background: rgba(255,255,255,0.2);
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            color: #2dd4bf;
-        }
-
-        .sidebar-nav {
-            padding: 1rem 0.75rem;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .nav-link-custom {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding: 0.75rem 1rem;
-            color: rgba(255,255,255,0.8);
-            border-radius: 0.6rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            margin-bottom: 0.25rem;
-            cursor: pointer;
-        }
-
-        .nav-link-custom:hover, .nav-link-custom.active {
-            color: #ffffff;
-            background: rgba(255,255,255,0.22);
-            font-weight: 600;
-        }
-
-        .save-pill {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.75rem;
-            border-radius: 50rem;
-            background-color: var(--teal-subtle);
-            color: var(--teal-dark);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .card-custom {
-            background: #ffffff;
-            border-radius: 0.85rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-
-        .stat-card {
-            padding: 1.25rem;
-            border-radius: 1rem;
-            border: 0;
-            color: #ffffff;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-icon {
-            position: absolute;
-            right: 1rem;
-            bottom: 0.75rem;
-            font-size: 2.75rem;
-            opacity: 0.2;
-        }
-
-        .kanban-col {
-            background: #f1f5f9;
-            border-radius: 0.85rem;
-            padding: 1rem;
-            min-height: 550px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .kanban-header {
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .kanban-card {
-            background: #ffffff;
-            border-radius: 0.65rem;
-            padding: 1rem;
-            margin-bottom: 0.85rem;
-            border: 1px solid #cbd5e1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
-        }
-
-        .kanban-card:hover {
-            border-color: var(--teal-primary);
-            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12);
-        }
-
-        .badge-priority-Urgent { background-color: #ef4444; color: white; }
-        .badge-priority-High { background-color: #f97316; color: white; }
-        .badge-priority-Medium { background-color: #3b82f6; color: white; }
-        .badge-priority-Low { background-color: #64748b; color: white; }
-
-        .btn-teal { background-color: var(--teal-primary); color: white; }
-        .btn-teal:hover { background-color: var(--teal-primary-hover); color: white; }
-        .btn-outline-teal { color: var(--teal-primary); border-color: var(--teal-primary); }
-        .btn-outline-teal:hover, .btn-outline-teal.active { background-color: var(--teal-primary); color: white; }
-
-        /* CALENDAR STYLING ENHANCED */
-        .calendar-day-col {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.75rem;
-            min-height: 500px;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.2s;
-        }
-        .calendar-day-col:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-color: var(--teal-border);
-        }
-        .calendar-day-header {
-            padding: 0.75rem;
-            background: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            border-top-left-radius: 0.75rem;
-            border-top-right-radius: 0.75rem;
-            font-weight: 700;
-            text-align: center;
-        }
-        .calendar-event-card {
-            background: #f0fdf4;
-            border-left: 3px solid var(--teal-primary);
-            padding: 0.6rem;
-            border-radius: 0.35rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: transform 0.1s;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        }
-        .calendar-event-card:hover {
-            transform: translateY(-1px);
-            background: var(--teal-subtle);
-        }
-        .calendar-task-card {
-            background: #eff6ff;
-            border-left: 3px solid #3b82f6;
-            padding: 0.6rem;
-            border-radius: 0.35rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-            cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-        }
-
-        @media (max-width: 991.98px) {
-            #app-sidebar { transform: translateX(-100%); }
-            #app-sidebar.show { transform: translateX(0); }
-            #app-topbar, #app-content { margin-left: 0; left: 0; }
-        }
+        @media (max-width: 991.98px) { #app-sidebar { transform: translateX(-100%); } #app-sidebar.show { transform: translateX(0); } #app-topbar, #app-content { margin-left: 0; left: 0; } }
     </style>
 </head>
 <body>
@@ -259,50 +63,28 @@
             <span>ĐTN THPT Nguyễn Văn Chất</span>
         </div>
         <div class="sidebar-nav">
-            <a class="nav-link-custom active" onclick="switchView('dashboard')">
-                <i class="fa-solid fa-chart-pie"></i><span>Tổng Quan Hoạt Động</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('tasks')">
-                <i class="fa-solid fa-list-check"></i><span>Nhiệm Vụ & Tiến Độ</span>
-                <span class="badge bg-light text-dark rounded-pill" id="badge-total-tasks">0</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('projects')">
-                <i class="fa-solid fa-calendar-star"></i><span>Chương Trình & Giấy Tờ</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('members')">
-                <i class="fa-solid fa-users-line"></i><span>Quản Lý Đoàn Viên</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('reports')">
-                <i class="fa-solid fa-file-lines"></i><span>Báo Cáo & Đánh Giá</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('calendar')">
-                <i class="fa-solid fa-calendar-days"></i><span>Lịch Công Tác</span>
-            </a>
+            <a class="nav-link-custom active" onclick="switchView('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Tổng Quan Hoạt Động</span></a>
+            <a class="nav-link-custom" onclick="switchView('tasks')"><i class="fa-solid fa-list-check"></i><span>Nhiệm Vụ & Tiến Độ</span><span class="badge bg-light text-dark rounded-pill" id="badge-total-tasks">0</span></a>
+            <a class="nav-link-custom" onclick="switchView('projects')"><i class="fa-solid fa-calendar-star"></i><span>Chương Trình & Giấy Tờ</span></a>
+            <a class="nav-link-custom" onclick="switchView('members')"><i class="fa-solid fa-users-line"></i><span>Quản Lý Đoàn Viên</span></a>
+            <a class="nav-link-custom" onclick="switchView('reports')"><i class="fa-solid fa-file-lines"></i><span>Báo Cáo & Đánh Giá</span></a>
+            <a class="nav-link-custom" onclick="switchView('calendar')"><i class="fa-solid fa-calendar-days"></i><span>Lịch Công Tác</span></a>
             <hr class="border-secondary my-2">
-            <a class="nav-link-custom" onclick="switchView('export')">
-                <i class="fa-solid fa-file-word text-info"></i><span>Xuất Báo Cáo Word / Excel</span>
-            </a>
-            <a class="nav-link-custom" onclick="switchView('settings')">
-                <i class="fa-solid fa-gear"></i><span>Cài Đặt & Google Sheets</span>
-            </a>
+            <a class="nav-link-custom" onclick="switchView('export')"><i class="fa-solid fa-file-word text-info"></i><span>Xuất Báo Cáo Word / Excel</span></a>
+            <a class="nav-link-custom" onclick="switchView('settings')"><i class="fa-solid fa-gear"></i><span>Cài Đặt & Google Sheets</span></a>
         </div>
     </aside>
 
     <!-- Topbar Header -->
     <header id="app-topbar">
         <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-light d-lg-none border" onclick="toggleSidebar()">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+            <button class="btn btn-light d-lg-none border" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
             <h5 class="m-0 fw-bold text-dark" id="page-title">Tổng Quan Hoạt Động</h5>
         </div>
         <div class="d-flex align-items-center gap-3">
             <button class="btn btn-sm btn-outline-teal" onclick="syncDataFromCloud()"><i class="fa-solid fa-rotate me-1"></i> Đồng bộ Cloud</button>
             <select class="form-select form-select-sm border-0 bg-light rounded-pill px-3" id="quick-period-select" style="max-width: 150px;" onchange="onQuickPeriodChange(this.value)">
-                <option value="ALL">Tất cả thời gian</option>
-                <option value="WEEK">Tuần này</option>
-                <option value="MONTH">Tháng này</option>
-                <option value="SEMESTER">Học kỳ này</option>
+                <option value="ALL">Tất cả thời gian</option><option value="WEEK">Tuần này</option><option value="MONTH">Tháng này</option><option value="SEMESTER">Học kỳ này</option>
             </select>
             <div class="save-pill" id="save-pill">
                 <i class="fa-solid fa-circle-check"></i><span id="save-status-text">Đã đồng bộ</span>
@@ -327,32 +109,28 @@
                     <div class="stat-card bg-primary">
                         <small class="text-white-50 text-uppercase fw-semibold">Tổng Nhiệm Vụ</small>
                         <h2 class="fw-bold my-1" id="dash-total">0</h2>
-                        <small class="text-white-50">Hoạt động phong trào</small>
-                        <i class="fa-solid fa-list-check stat-icon"></i>
+                        <small class="text-white-50">Hoạt động phong trào</small><i class="fa-solid fa-list-check stat-icon"></i>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="stat-card" style="background: #0284c7;">
                         <small class="text-white-50 text-uppercase fw-semibold">Đang Triển Khai</small>
                         <h2 class="fw-bold my-1" id="dash-inprogress">0</h2>
-                        <small class="text-white-50">Đang thực hiện</small>
-                        <i class="fa-solid fa-spinner stat-icon"></i>
+                        <small class="text-white-50">Đang thực hiện</small><i class="fa-solid fa-spinner stat-icon"></i>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="stat-card" style="background: #059669;">
                         <small class="text-white-50 text-uppercase fw-semibold">Đã Hoàn Thành</small>
                         <h2 class="fw-bold my-1" id="dash-completed">0</h2>
-                        <small class="text-white-50" id="dash-completed-rate">0% hoàn thành</small>
-                        <i class="fa-solid fa-circle-check stat-icon"></i>
+                        <small class="text-white-50" id="dash-completed-rate">0% hoàn thành</small><i class="fa-solid fa-circle-check stat-icon"></i>
                     </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="stat-card" style="background: #dc2626;">
                         <small class="text-white-50 text-uppercase fw-semibold">Chậm Tiến Độ</small>
                         <h2 class="fw-bold my-1" id="dash-overdue">0</h2>
-                        <small class="text-white-50">Cần đôn đốc</small>
-                        <i class="fa-solid fa-triangle-exclamation stat-icon"></i>
+                        <small class="text-white-50">Cần đôn đốc</small><i class="fa-solid fa-triangle-exclamation stat-icon"></i>
                     </div>
                 </div>
             </div>
@@ -361,9 +139,7 @@
                 <div class="col-12 col-lg-8">
                     <div class="card card-custom p-3 h-100">
                         <h6 class="fw-bold mb-3"><i class="fa-solid fa-chart-area text-teal me-2"></i>Thống Kê Hoạt Động Theo Chu Kỳ</h6>
-                        <div style="height: 280px; position: relative;">
-                            <canvas id="activityChart"></canvas>
-                        </div>
+                        <div style="height: 280px; position: relative;"><canvas id="activityChart"></canvas></div>
                     </div>
                 </div>
                 <div class="col-12 col-lg-4">
@@ -390,34 +166,20 @@
                     </div>
                     <div class="col-6 col-md-2">
                         <select id="filter-priority" class="form-select" onchange="renderTasks()">
-                            <option value="ALL">Tất cả mức độ</option>
-                            <option value="Urgent">Đặc biệt gấp</option>
-                            <option value="High">Quan trọng</option>
-                            <option value="Medium">Thường xuyên</option>
-                            <option value="Low">Thông tin</option>
+                            <option value="ALL">Tất cả mức độ</option><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium">Thường xuyên</option><option value="Low">Thông tin</option>
                         </select>
                     </div>
                     <div class="col-6 col-md-2">
                         <select id="filter-status" class="form-select" onchange="renderTasks()">
-                            <option value="ALL">Tất cả trạng thái</option>
-                            <option value="TODO">Cần làm</option>
-                            <option value="IN_PROGRESS">Đang làm</option>
-                            <option value="REVIEW">Nghiệm thu</option>
-                            <option value="DONE">Hoàn thành</option>
+                            <option value="ALL">Tất cả trạng thái</option><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option>
                         </select>
                     </div>
                     <div class="col-12 col-md-5 text-end d-flex gap-2 justify-content-end">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-teal active" id="btn-view-kanban" onclick="setTaskViewMode('kanban')">
-                                <i class="fa-solid fa-square-kanban"></i> Kanban
-                            </button>
-                            <button type="button" class="btn btn-outline-teal" id="btn-view-table" onclick="setTaskViewMode('table')">
-                                <i class="fa-solid fa-table-list"></i> Danh Sách
-                            </button>
+                            <button type="button" class="btn btn-outline-teal active" id="btn-view-kanban" onclick="setTaskViewMode('kanban')"><i class="fa-solid fa-square-kanban"></i> Kanban</button>
+                            <button type="button" class="btn btn-outline-teal" id="btn-view-table" onclick="setTaskViewMode('table')"><i class="fa-solid fa-table-list"></i> Danh Sách</button>
                         </div>
-                        <button class="btn btn-teal text-white fw-semibold" onclick="openTaskModal()">
-                            <i class="fa-solid fa-plus me-1"></i> Thêm Nhiệm Vụ
-                        </button>
+                        <button class="btn btn-teal text-white fw-semibold" onclick="openTaskModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Nhiệm Vụ</button>
                     </div>
                 </div>
             </div>
@@ -430,15 +192,7 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
-                            <tr>
-                                <th>Nội Dung Nhiệm Vụ</th>
-                                <th>Chương Trình</th>
-                                <th>Người Phụ Trách & Gmail</th>
-                                <th>Mức Độ</th>
-                                <th>Trạng Thái & Tiến Độ</th>
-                                <th>Tài Liệu Đính Kèm</th>
-                                <th class="text-end">Thao Tác</th>
-                            </tr>
+                            <tr><th>Nội Dung Nhiệm Vụ</th><th>Chương Trình</th><th>Người Phụ Trách & Gmail</th><th>Mức Độ</th><th>Trạng Thái & Tiến Độ</th><th>Tài Liệu Đính Kèm</th><th class="text-end">Thao Tác</th></tr>
                         </thead>
                         <tbody id="task-table-body"></tbody>
                     </table>
@@ -450,9 +204,7 @@
         <section id="view-projects" class="view-section d-none">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="fw-bold m-0"><i class="fa-solid fa-calendar-star text-teal me-2"></i>Chương Trình & Giấy Tờ Lưu Trữ</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openProjectModal()">
-                    <i class="fa-solid fa-plus me-1"></i> Tạo Chương Trình Mới
-                </button>
+                <button class="btn btn-teal text-white fw-semibold" onclick="openProjectModal()"><i class="fa-solid fa-plus me-1"></i> Tạo Chương Trình Mới</button>
             </div>
             <div class="row g-3" id="projects-list-container"></div>
         </section>
@@ -461,22 +213,13 @@
         <section id="view-members" class="view-section d-none">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="fw-bold m-0"><i class="fa-solid fa-users-line text-teal me-2"></i>Cơ Sở Dữ Liệu Đoàn Viên</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openMemberModal()">
-                    <i class="fa-solid fa-user-plus me-1"></i> Thêm Đoàn Viên
-                </button>
+                <button class="btn btn-teal text-white fw-semibold" onclick="openMemberModal()"><i class="fa-solid fa-user-plus me-1"></i> Thêm Đoàn Viên</button>
             </div>
             <div class="card card-custom p-3">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
-                            <tr>
-                                <th>Họ và Tên Đoàn Viên</th>
-                                <th>Chức Vụ / Chi Đoàn</th>
-                                <th>Số Điện Thoại</th>
-                                <th>Địa Chỉ Gmail</th>
-                                <th>Nhiệm Vụ Đang Nhận</th>
-                                <th class="text-end">Quản Lý</th>
-                            </tr>
+                            <tr><th>Họ và Tên Đoàn Viên</th><th>Chức Vụ / Chi Đoàn</th><th>Số Điện Thoại</th><th>Địa Chỉ Gmail</th><th>Nhiệm Vụ Đang Nhận</th><th class="text-end">Quản Lý</th></tr>
                         </thead>
                         <tbody id="members-table-body"></tbody>
                     </table>
@@ -488,9 +231,7 @@
         <section id="view-reports" class="view-section d-none">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h5 class="fw-bold m-0"><i class="fa-solid fa-file-lines text-teal me-2"></i>Báo Cáo & Đánh Giá Chương Trình</h5>
-                <button class="btn btn-teal text-white fw-semibold" onclick="openReportModal()">
-                    <i class="fa-solid fa-pen-to-square me-1"></i> Viết Đánh Giá Mới
-                </button>
+                <button class="btn btn-teal text-white fw-semibold" onclick="openReportModal()"><i class="fa-solid fa-pen-to-square me-1"></i> Viết Đánh Giá Mới</button>
             </div>
             <div class="row g-3" id="reports-list-container"></div>
         </section>
@@ -511,11 +252,10 @@
                         <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                         <button class="btn btn-teal btn-sm fw-semibold px-3" onclick="resetCalendarToToday()">Hôm nay</button>
                         <button class="btn btn-outline-teal btn-sm" onclick="changeWeek(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                        <button class="btn btn-success btn-sm ms-2" onclick="openCalendarModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch Công Tác</button>
+                        <button class="btn btn-success btn-sm ms-2" onclick="openCalendarModal()"><i class="fa-solid fa-plus me-1"></i> Thêm Lịch</button>
                     </div>
                 </div>
             </div>
-
             <!-- GRID 7 NGÀY CHUYÊN NGHIỆP -->
             <div class="row g-3" id="weekly-calendar-grid"></div>
         </section>
@@ -586,32 +326,14 @@
                 <div class="modal-body">
                     <form id="calendar-event-form">
                         <input type="hidden" id="cal-event-id">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Nội Dung / Tên Sự Kiện Lịch *</label>
-                            <input type="text" id="cal-event-title" class="form-control" placeholder="Ví dụ: Họp Ban Chấp Hành Đoàn Trường..." required>
-                        </div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Nội Dung / Tên Sự Kiện Lịch *</label><input type="text" id="cal-event-title" class="form-control" placeholder="Ví dụ: Họp Ban Chấp Hành Đoàn Trường..." required></div>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Ngày Diễn Ra *</label>
-                                <input type="date" id="cal-event-date" class="form-control" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Thời Gian</label>
-                                <input type="text" id="cal-event-time" class="form-control" placeholder="Ví dụ: 08:00 - 10:30">
-                            </div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Ngày Diễn Ra *</label><input type="date" id="cal-event-date" class="form-control" required></div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Thời Gian</label><input type="text" id="cal-event-time" class="form-control" placeholder="Ví dụ: 08:00 - 10:30"></div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Địa Điểm Tổ Chức</label>
-                            <input type="text" id="cal-event-location" class="form-control" placeholder="Ví dụ: Phòng họp hội đồng / Sân trường...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Đoàn Viên / Cán Bộ Phụ Trách</label>
-                            <select id="cal-event-member" class="form-select"></select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Ghi Chú Chi Tiết</label>
-                            <textarea id="cal-event-desc" class="form-control" rows="2" placeholder="Thành phần tham gia, tài liệu chuẩn bị..."></textarea>
-                        </div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Địa Điểm Tổ Chức</label><input type="text" id="cal-event-location" class="form-control" placeholder="Ví dụ: Phòng họp hội đồng / Sân trường..."></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Đoàn Viên / Cán Bộ Phụ Trách</label><select id="cal-event-member" class="form-select"></select></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Ghi Chú Chi Tiết</label><textarea id="cal-event-desc" class="form-control" rows="2" placeholder="Thành phần tham gia, tài liệu chuẩn bị..."></textarea></div>
                     </form>
                 </div>
                 <div class="modal-footer border-0 pt-0">
@@ -633,58 +355,29 @@
                 <div class="modal-body">
                     <form id="task-form">
                         <input type="hidden" id="task-id">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Tên Nhiệm Vụ / Công Việc *</label>
-                            <input type="text" id="task-title" class="form-control" placeholder="Ví dụ: Lập kế hoạch hội trại..." required>
-                        </div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Tên Nhiệm Vụ / Công Việc *</label><input type="text" id="task-title" class="form-control" placeholder="Ví dụ: Lập kế hoạch hội trại..." required></div>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Chương Trình Liên Kết *</label>
-                                <select id="task-project" class="form-select" required></select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Người Phụ Trách (Từ CSDL Đoàn Viên) *</label>
-                                <select id="task-member" class="form-select" required></select>
-                            </div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Chương Trình Liên Kết *</label><select id="task-project" class="form-select" required></select></div>
+                            <div class="col-md-6"><label class="form-label fw-semibold">Người Phụ Trách (Từ CSDL Đoàn Viên) *</label><select id="task-member" class="form-select" required></select></div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Mức Độ Ưu Tiên *</label>
-                                <select id="task-priority" class="form-select" required>
-                                    <option value="Urgent">Đặc biệt gấp</option>
-                                    <option value="High">Quan trọng</option>
-                                    <option value="Medium" selected>Thường xuyên</option>
-                                    <option value="Low">Thông tin</option>
-                                </select>
+                                <select id="task-priority" class="form-select" required><option value="Urgent">Đặc biệt gấp</option><option value="High">Quan trọng</option><option value="Medium" selected>Thường xuyên</option><option value="Low">Thông tin</option></select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Trạng Thái (Tiến Độ) *</label>
-                                <select id="task-status" class="form-select" required>
-                                    <option value="TODO">Cần làm</option>
-                                    <option value="IN_PROGRESS">Đang làm</option>
-                                    <option value="REVIEW">Nghiệm thu</option>
-                                    <option value="DONE">Hoàn thành</option>
-                                </select>
+                                <select id="task-status" class="form-select" required><option value="TODO">Cần làm</option><option value="IN_PROGRESS">Đang làm</option><option value="REVIEW">Nghiệm thu</option><option value="DONE">Hoàn thành</option></select>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-semibold">Hạn Chót (Deadline)</label>
                                 <input type="date" id="task-deadline" class="form-control">
                             </div>
                         </div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Tài liệu đính kèm (Link Drive/File)</label><input type="text" id="task-attachment" class="form-control" placeholder="Dán link Google Drive hoặc URL tài liệu..."></div>
+                        <div class="mb-3"><label class="form-label fw-semibold">Ghi Chú Chi Tiết</label><textarea id="task-desc" class="form-control" rows="2" placeholder="Yêu cầu cụ thể..."></textarea></div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Tài liệu đính kèm / Link sản phẩm (Google Drive, PDF, DOCX, XLSX...)</label>
-                            <input type="text" id="task-attachment" class="form-control" placeholder="Dán link Google Drive hoặc URL tài liệu...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Ghi Chú Chi Tiết</label>
-                            <textarea id="task-desc" class="form-control" rows="2" placeholder="Yêu cầu cụ thể..."></textarea>
-                        </div>
-                        <!-- Subtasks Checklist -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold d-flex justify-content-between align-items-center">
-                                <span>Hạng Mục Việc Con (Checklist)</span>
-                                <button type="button" class="btn btn-sm btn-outline-teal" onclick="addSubtaskInput()"><i class="fa-solid fa-plus me-1"></i> Thêm mục</button>
-                            </label>
+                            <label class="form-label fw-semibold d-flex justify-content-between align-items-center"><span>Hạng Mục Việc Con (Checklist)</span><button type="button" class="btn btn-sm btn-outline-teal" onclick="addSubtaskInput()"><i class="fa-solid fa-plus me-1"></i> Thêm mục</button></label>
                             <div id="subtasks-input-container" class="d-flex flex-column gap-2"></div>
                         </div>
                     </form>
@@ -697,149 +390,46 @@
         </div>
     </div>
 
-    <!-- PROJECT / EVENT MODAL -->
+    <!-- PROJECT MODAL -->
     <div class="modal fade" id="projectModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold" id="projectModalTitle">Tạo Chương Trình Mới</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="project-form">
-                        <input type="hidden" id="project-id">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Tên Chương Trình / Sự Kiện *</label>
-                            <input type="text" id="project-name" class="form-control" placeholder="Ví dụ: Tháng Thanh Niên 2026..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Giấy Tờ & Tài Liệu Kế Hoạch (Gắn Link Google Drive / File)</label>
-                            <input type="text" id="project-attachment" class="form-control" placeholder="Link Drive chứa kế hoạch, quyết định, v.v...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Màu Đánh Dấu</label>
-                            <input type="color" id="project-color" class="form-control form-control-color w-100" value="#0d9488">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveProject()">Lưu Chương Trình</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="projectModalTitle">Tạo Chương Trình Mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="project-form"><input type="hidden" id="project-id"><div class="mb-3"><label class="form-label fw-semibold">Tên Chương Trình / Sự Kiện *</label><input type="text" id="project-name" class="form-control" required></div><div class="mb-3"><label class="form-label fw-semibold">Giấy Tờ Kế Hoạch (Link Drive)</label><input type="text" id="project-attachment" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Màu Đánh Dấu</label><input type="color" id="project-color" class="form-control form-control-color w-100" value="#0d9488"></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveProject()">Lưu Chương Trình</button></div></div></div>
     </div>
 
     <!-- MEMBER MODAL -->
     <div class="modal fade" id="memberModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold" id="memberModalTitle">Thêm Đoàn Viên</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="member-form">
-                        <input type="hidden" id="member-id">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Họ và Tên Đoàn Viên *</label>
-                            <input type="text" id="member-name" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Chức Vụ / Chi Đoàn</label>
-                            <input type="text" id="member-role" class="form-control" placeholder="Ví dụ: Ủy viên BCH Chi đoàn K48">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Số Điện Thoại</label>
-                            <input type="text" id="member-phone" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Địa Chỉ Gmail *</label>
-                            <input type="email" id="member-email" class="form-control" placeholder="doanvien@gmail.com" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveMember()">Lưu Đoàn Viên</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold" id="memberModalTitle">Thêm Đoàn Viên</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="member-form"><input type="hidden" id="member-id"><div class="mb-3"><label class="form-label fw-semibold">Họ và Tên Đoàn Viên *</label><input type="text" id="member-name" class="form-control" required></div><div class="mb-3"><label class="form-label fw-semibold">Chức Vụ / Chi Đoàn</label><input type="text" id="member-role" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Số Điện Thoại</label><input type="text" id="member-phone" class="form-control"></div><div class="mb-3"><label class="form-label fw-semibold">Địa Chỉ Gmail *</label><input type="email" id="member-email" class="form-control" required></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveMember()">Lưu Đoàn Viên</button></div></div></div>
     </div>
 
     <!-- REPORT MODAL -->
     <div class="modal fade" id="reportModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Đánh Giá & Nhận Xét Chương Trình</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="report-form">
-                        <input type="hidden" id="report-id">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Chọn Chương Trình / Sự Kiện Liên Kết *</label>
-                            <select id="report-project" class="form-select" required></select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Đánh Giá Xếp Loại *</label>
-                            <select id="report-rating" class="form-select" required>
-                                <option value="Xuất sắc">Xuất sắc</option>
-                                <option value="Tốt" selected>Tốt</option>
-                                <option value="Khá">Khá</option>
-                                <option value="Cần rút kinh nghiệm">Cần rút kinh nghiệm</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Nhận Xét Chi Tiết & Rút Kinh Nghiệm *</label>
-                            <textarea id="report-content" class="form-control" rows="4" placeholder="Đánh giá kết quả thực hiện chương trình..." required></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveReport()">Lưu Báo Cáo Đánh Giá</button>
-                </div>
-            </div>
-        </div>
+        <div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-4 border-0"><div class="modal-header border-0"><h5 class="modal-title fw-bold">Đánh Giá Chương Trình</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><form id="report-form"><input type="hidden" id="report-id"><div class="mb-3"><label class="form-label fw-semibold">Chọn Chương Trình *</label><select id="report-project" class="form-select" required></select></div><div class="mb-3"><label class="form-label fw-semibold">Đánh Giá *</label><select id="report-rating" class="form-select" required><option value="Xuất sắc">Xuất sắc</option><option value="Tốt" selected>Tốt</option><option value="Khá">Khá</option><option value="Cần rút kinh nghiệm">Cần rút kinh nghiệm</option></select></div><div class="mb-3"><label class="form-label fw-semibold">Nhận Xét *</label><textarea id="report-content" class="form-control" rows="4" required></textarea></div></form></div><div class="modal-footer border-0"><button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-teal text-white fw-semibold" onclick="saveReport()">Lưu Báo Cáo</button></div></div></div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC TRỌN GÓI -->
+    <!-- JAVASCRIPT -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <script>
-        const DEFAULT_GAS_URL = localStorage.getItem('TealYouth_GAS_URL') || 'https://script.google.com/macros/s/AKfycbwSsD3KR3KBMlZq7n3JrJqGLdI/exec';
+        const DEFAULT_GAS_URL = localStorage.getItem('TealYouth_GAS_URL') || '';
 
+        // TẠO TRẠNG THÁI KHỞI TẠO RỖNG ĐỂ KHÔNG BỊ RÁC GHI ĐÈ LÊN CLOUD
         let AppState = {
             user: { name: "Nguyễn Quang Duy", title: "Bí Thư Đoàn Thanh Niên", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=YouthLeader" },
-            projects: [
-                { id: 'proj-1', name: 'Tháng Thanh Niên 2026', color: '#0d9488', attachment: '' },
-                { id: 'proj-2', name: 'Chiến dịch Mùa hè xanh', color: '#0284c7', attachment: '' }
-            ],
-            members: [
-                { id: 'mem-1', name: 'Trần Văn Bình', role: 'Phó Bí Thư', phone: '0987654321', email: 'binhtv.doan@gmail.com' },
-                { id: 'mem-2', name: 'Lê Thị Hoa', role: 'Ủy viên BCH', phone: '0912345678', email: 'hoalt.doan@gmail.com' }
-            ],
-            tasks: [
-                {
-                    id: 'task-101', title: 'Lên kế hoạch tổ chức mít tinh', projectId: 'proj-1', memberId: 'mem-1',
-                    priority: 'Urgent', status: 'IN_PROGRESS', deadline: new Date().toISOString().split('T')[0],
-                    desc: 'Soạn thảo văn bản trình cấp trên.', attachment: '', subtasks: [{ title: 'Dự thảo kịch bản', done: true }, { title: 'Duyệt nội dung', done: false }]
-                }
-            ],
-            calendarEvents: [],
-            reports: [
-                { id: 'rep-1', projectId: 'proj-1', rating: 'Tốt', content: 'Công tác chuẩn bị chu đáo, đoàn viên tham gia nhiệt tình, đúng tiến độ đề ra.', date: '2026-03-15' }
-            ]
+            projects: [], members: [], tasks: [], calendarEvents: [], reports: []
         };
 
-        let taskViewMode = 'kanban';
-        let quickPeriodFilter = 'ALL';
-        let chartsInstance = {};
+        // BƯỚC CỨU CÁNH: LUÔN KHÔI PHỤC DỮ LIỆU TỪ TRÌNH DUYỆT NGAY LẬP TỨC ĐỂ KHÔNG BỊ TRỐNG
+        const savedLocal = localStorage.getItem('TealYouth_Local_Backup');
+        if (savedLocal) {
+            try { 
+                const parsed = JSON.parse(savedLocal);
+                if (parsed && parsed.tasks) AppState = parsed;
+            } catch(e) {}
+        }
+
+        let taskViewMode = 'kanban', quickPeriodFilter = 'ALL', chartsInstance = {};
         let taskModalObj, projectModalObj, memberModalObj, reportModalObj, calendarModalObj;
         let calendarStartDate = new Date();
 
@@ -851,21 +441,28 @@
             calendarModalObj = new bootstrap.Modal(document.getElementById('calendarModal'));
             
             document.getElementById('setting-gas-url').value = DEFAULT_GAS_URL;
-            syncDataFromCloud(true);
+            
+            // Render luôn dữ liệu đã cứu từ LocalBackup trước khi tải Cloud
+            initAppUI(); 
+            
+            // Sau đó gọi lấy Cloud để cập nhật cái mới nhất (nếu có)
+            if(DEFAULT_GAS_URL) {
+                syncDataFromCloud(true);
+            }
         });
 
         function initAppUI() {
             updateUserProfileUI();
             populateDropdowns();
-            switchView('dashboard');
+            switchView('dashboard'); // Tự render dashboard từ AppState hiện tại
         }
 
-        // --- OPTIMIZED CLOUD SYNC ---
         function saveData() {
+            // Luôn lưu nháp vào máy trước
             localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState));
             document.getElementById('badge-total-tasks').textContent = AppState.tasks.length;
             
-            const gasUrl = document.getElementById('setting-gas-url').value.trim() || DEFAULT_GAS_URL;
+            const gasUrl = document.getElementById('setting-gas-url').value.trim();
             if (!gasUrl) return;
 
             document.getElementById('save-status-text').textContent = 'Đang đồng bộ...';
@@ -884,36 +481,48 @@
         }
 
         function syncDataFromCloud(silent = false) {
-            const gasUrl = document.getElementById('setting-gas-url').value.trim() || DEFAULT_GAS_URL;
+            const gasUrl = document.getElementById('setting-gas-url').value.trim();
             if (!gasUrl) {
-                if(!silent) Swal.fire('Thông báo', 'Chưa có Google Apps Script Web App URL!', 'warning');
-                initAppUI();
+                if(!silent) Swal.fire('Thông báo', 'Bạn chưa cấu hình Link Cài Đặt Google Sheets!', 'warning');
                 return;
             }
 
-            if(!silent) Swal.fire({ title: 'Đang đồng bộ dữ liệu...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            if(!silent) Swal.fire({ title: 'Đang kết nối tải dữ liệu...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const timeoutId = setTimeout(() => controller.abort(), 12000);
 
             fetch(gasUrl, { signal: controller.signal })
                 .then(res => res.json())
                 .then(data => {
                     clearTimeout(timeoutId);
                     if (data && data.tasks) {
+                        // Nếu lấy thành công, ta mới ghi đè AppState
                         AppState = data;
-                        if(data.settings) AppState.user = data.settings;
+                        if(data.settings && data.settings.name) AppState.user = data.settings;
                         if(!AppState.calendarEvents) AppState.calendarEvents = [];
+                        
+                        // Cập nhật lại bộ nhớ nháp máy tính
+                        localStorage.setItem('TealYouth_Local_Backup', JSON.stringify(AppState));
                     }
                     if(!silent) Swal.close();
                     initAppUI();
-                    if(!silent) Swal.fire({ icon: 'success', title: 'Đồng bộ thành công!', timer: 1000, showConfirmButton: false });
+                    if(!silent) Swal.fire({ icon: 'success', title: 'Tải dữ liệu hoàn tất!', timer: 1000, showConfirmButton: false });
                 })
                 .catch(err => {
                     clearTimeout(timeoutId);
-                    console.error(err);
                     if(!silent) Swal.close();
+                    
+                    // NẾU BỊ LỖI KẾT NỐI (DO LỖI CORS HOẶC RỚT MẠNG), CỨ TIẾP TỤC SỬ DỤNG DỮ LIỆU ĐÃ LƯU TRONG LOCALSTORAGE
                     initAppUI();
+                    
+                    if(!silent) {
+                        Swal.fire({
+                            title: 'Lỗi Phân Quyền Sheets', 
+                            text: 'Trình duyệt chặn kéo dữ liệu vì Web App chưa được phân quyền đúng. Đang tạm thời dùng dữ liệu nháp (Local Backup). Bạn hãy đọc hướng dẫn cấu hình ở trên để sửa lỗi!',
+                            icon: 'warning'
+                        });
+                    }
                 });
         }
 
@@ -958,8 +567,8 @@
                             <small class="text-danger d-block">Hạn: ${t.deadline ? t.deadline.split('T')[0] : 'Không'} - ${m.name}</small>
                         </div>
                         <div class="d-flex gap-1">
-                            <button class="btn btn-sm btn-outline-primary" onclick="sendRealEmail('${t.id}')" title="Gửi email thực tế"><i class="fa-solid fa-envelope"></i></button>
-                            <button class="btn btn-sm btn-outline-teal" onclick="quickComplete('${t.id}')" title="Hoàn thành nhanh"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="sendRealEmail('${t.id}')" title="Gửi email"><i class="fa-solid fa-envelope"></i></button>
+                            <button class="btn btn-sm btn-outline-teal" onclick="quickComplete('${t.id}')" title="Hoàn thành"><i class="fa-solid fa-check"></i></button>
                         </div>
                     </div>
                 `;
@@ -977,7 +586,7 @@
             });
         }
 
-        // --- TASKS VIEW & ACTIONS ---
+        // --- TASKS ---
         function setTaskViewMode(mode) {
             taskViewMode = mode;
             document.getElementById('btn-view-kanban').classList.toggle('active', mode === 'kanban');
@@ -1026,11 +635,10 @@
                                     <option value="DONE" ${t.status==='DONE'?'selected':''}>Hoàn thành</option>
                                 </select>
                             </td>
-                            <td>${t.attachment ? `<a href="${t.attachment}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-paperclip me-1"></i>Xem File</a>` : '<span class="text-muted small">Không có</span>'}</td>
+                            <td>${t.attachment ? `<a href="${t.attachment}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-paperclip me-1"></i>Xem</a>` : '<span class="text-muted small">Không</span>'}</td>
                             <td class="text-end">
-                                <button class="btn btn-sm btn-outline-primary me-1" onclick="sendRealEmail('${t.id}')" title="Gửi email"><i class="fa-solid fa-envelope"></i></button>
-                                <button class="btn btn-sm btn-outline-teal me-1" onclick="openTaskModal('${t.id}')" title="Sửa"><i class="fa-solid fa-pen"></i></button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTask('${t.id}')" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                                <button class="btn btn-sm btn-outline-teal me-1" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                     `;
@@ -1040,7 +648,7 @@
 
         function renderCardHtml(t) {
             const p = AppState.projects.find(x => x.id === t.projectId) || {name: 'Chương trình'};
-            const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công', email: ''};
+            const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công'};
             const subs = t.subtasks || [];
             const doneSubs = subs.filter(s => s.done).length;
             const deadlineFormatted = t.deadline ? String(t.deadline).split('T')[0] : '';
@@ -1052,7 +660,7 @@
                             <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" onclick="openTaskModal('${t.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa nhiệm vụ</a></li>
-                                <li><a class="dropdown-item" onclick="sendRealEmail('${t.id}')"><i class="fa-solid fa-envelope me-2"></i>Gửi Email Nhắc Nhở</a></li>
+                                <li><a class="dropdown-item" onclick="sendRealEmail('${t.id}')"><i class="fa-solid fa-envelope me-2"></i>Gửi Email Nhắc</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa</a></li>
                             </ul>
@@ -1076,52 +684,25 @@
             `;
         }
 
-        function dropTask(ev, newStatus) {
-            ev.preventDefault();
-            const taskId = ev.dataTransfer.getData("taskId");
-            const task = AppState.tasks.find(t => t.id === taskId);
-            if (task) { task.status = newStatus; saveData(); renderTasks(); }
-        }
+        function dropTask(ev, newStatus) { ev.preventDefault(); const taskId = ev.dataTransfer.getData("taskId"); const task = AppState.tasks.find(t => t.id === taskId); if (task) { task.status = newStatus; saveData(); renderTasks(); } }
 
-        // --- REAL EMAIL SENDING ---
         function sendRealEmail(taskId) {
             const t = AppState.tasks.find(x => x.id === taskId);
             if (!t) return;
             const m = AppState.members.find(x => x.id === t.memberId);
-            if (!m || !m.email) {
-                Swal.fire('Lỗi', 'Nhiệm vụ chưa được phân công hoặc chưa có email trong CSDL!', 'warning');
-                return;
-            }
-
-            const gasUrl = document.getElementById('setting-gas-url').value.trim() || DEFAULT_GAS_URL;
+            if (!m || !m.email) { Swal.fire('Lỗi', 'Chưa có email trong CSDL!', 'warning'); return; }
+            const gasUrl = document.getElementById('setting-gas-url').value.trim();
             Swal.fire({ title: 'Đang gửi Email...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-            const payload = {
-                action: 'sendEmail',
-                email: m.email,
-                subject: `[ĐOÀN TN THPT NGUYỄN VĂN CHẤT] Đôn đốc thực hiện: ${t.title}`,
-                body: `Chào đồng chí ${m.name},\n\nBan Chấp hành Đoàn Trường THPT Nguyễn Văn Chất gửi email đôn đốc tiến độ:\n- Tên nhiệm vụ: ${t.title}\n- Hạn chót: ${t.deadline ? String(t.deadline).split('T')[0] : 'Không'}\n- Trạng thái: ${getStatusLabel(t.status)}\n\nĐề nghị đồng chí khẩn trương hoàn thành đúng kế hoạch.\n\nTrân trọng,\n${AppState.user.name} - ${AppState.user.title}`
-            };
-
-            fetch(gasUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                Swal.fire('Thành công!', `Đã gửi email nhắc nhở tới ${m.email}`, 'success');
-            }).catch(err => {
-                console.error(err);
-                Swal.fire('Lỗi', 'Không thể gửi email qua Server.', 'error');
-            });
+            const payload = { action: 'sendEmail', email: m.email, subject: `[ĐOÀN TN THPT Nguyễn Văn Chất] Đôn đốc tiến độ: ${t.title}`, body: `Chào đồng chí ${m.name},\nBan Chấp hành gửi email đôn đốc:\n- Tên nhiệm vụ: ${t.title}\n- Hạn chót: ${t.deadline ? String(t.deadline).split('T')[0] : 'Không'}\n- Trạng thái: ${getStatusLabel(t.status)}\n\nĐề nghị đồng chí khẩn trương hoàn thành.\nTrân trọng.` };
+            fetch(gasUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+                .then(() => Swal.fire('Thành công!', `Đã gửi email tới ${m.email}`, 'success'))
+                .catch(err => Swal.fire('Lỗi', 'Không thể gửi email.', 'error'));
         }
 
-        // --- CRUD TASKS ---
         function openTaskModal(taskId = null) {
             populateDropdowns();
             document.getElementById('task-form').reset();
             document.getElementById('subtasks-input-container').innerHTML = '';
-
             if (taskId) {
                 const t = AppState.tasks.find(x => x.id === taskId);
                 document.getElementById('taskModalTitle').textContent = 'Chỉnh Sửa Nhiệm Vụ';
@@ -1131,7 +712,6 @@
                 document.getElementById('task-member').value = t.memberId || '';
                 document.getElementById('task-priority').value = t.priority;
                 document.getElementById('task-status').value = t.status;
-                // Chuẩn hóa chuỗi ngày deadline thành YYYY-MM-DD để hiển thị chính xác vào input date
                 document.getElementById('task-deadline').value = t.deadline ? String(t.deadline).split('T')[0] : '';
                 document.getElementById('task-attachment').value = t.attachment || '';
                 document.getElementById('task-desc').value = t.desc || '';
@@ -1139,7 +719,6 @@
             } else {
                 document.getElementById('taskModalTitle').textContent = 'Thêm Nhiệm Vụ Hoạt Động';
                 document.getElementById('task-id').value = '';
-                // Mặc định điền ngày hôm nay
                 document.getElementById('task-deadline').value = new Date().toISOString().split('T')[0];
             }
             taskModalObj.show();
@@ -1149,11 +728,7 @@
             const container = document.getElementById('subtasks-input-container');
             const row = document.createElement('div');
             row.className = 'input-group input-group-sm';
-            row.innerHTML = `
-                <div class="input-group-text"><input class="form-check-input mt-0" type="checkbox" ${done ? 'checked' : ''}></div>
-                <input type="text" class="form-control" placeholder="Tên việc con..." value="${title}">
-                <button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
-            `;
+            row.innerHTML = `<div class="input-group-text"><input class="form-check-input mt-0" type="checkbox" ${done ? 'checked' : ''}></div><input type="text" class="form-control" placeholder="Tên việc con..." value="${title}"><button class="btn btn-outline-danger" type="button" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>`;
             container.appendChild(row);
         }
 
@@ -1162,56 +737,30 @@
             const title = document.getElementById('task-title').value.trim();
             if (!title) { Swal.fire('Lỗi', 'Vui lòng nhập tên nhiệm vụ', 'error'); return; }
 
-            const subtasks = Array.from(document.querySelectorAll('#subtasks-input-container .input-group')).map(row => ({
-                title: row.querySelector('input[type="text"]').value.trim(),
-                done: row.querySelector('input[type="checkbox"]').checked
-            })).filter(s => s.title);
-
+            const subtasks = Array.from(document.querySelectorAll('#subtasks-input-container .input-group')).map(row => ({ title: row.querySelector('input[type="text"]').value.trim(), done: row.querySelector('input[type="checkbox"]').checked })).filter(s => s.title);
             const deadlineVal = document.getElementById('task-deadline').value;
 
             const payload = {
-                title, 
-                projectId: document.getElementById('task-project').value,
+                title, projectId: document.getElementById('task-project').value,
                 memberId: document.getElementById('task-member').value,
-                priority: document.getElementById('task-priority').value, 
-                status: document.getElementById('task-status').value,
+                priority: document.getElementById('task-priority').value, status: document.getElementById('task-status').value,
                 deadline: deadlineVal ? deadlineVal.split('T')[0] : '', 
                 attachment: document.getElementById('task-attachment').value.trim(),
-                desc: document.getElementById('task-desc').value.trim(), 
-                subtasks
+                desc: document.getElementById('task-desc').value.trim(), subtasks
             };
 
-            if (id) {
-                Object.assign(AppState.tasks.find(t => t.id === id), payload);
-            } else {
-                AppState.tasks.unshift({ id: 'task-' + Date.now(), ...payload });
-            }
-
+            if (id) { Object.assign(AppState.tasks.find(t => t.id === id), payload); } else { AppState.tasks.unshift({ id: 'task-' + Date.now(), ...payload }); }
             saveData(); taskModalObj.hide(); renderTasks();
-            Swal.fire({ icon: 'success', title: 'Đã lưu và đồng bộ!', timer: 1000, showConfirmButton: false });
+            Swal.fire({ icon: 'success', title: 'Đã lưu!', timer: 1000, showConfirmButton: false });
         }
 
-        function deleteTask(id) {
-            Swal.fire({ title: 'Xóa nhiệm vụ này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => {
-                if (res.isConfirmed) { AppState.tasks = AppState.tasks.filter(t => t.id !== id); saveData(); renderTasks(); }
-            });
-        }
+        function deleteTask(id) { Swal.fire({ title: 'Xóa nhiệm vụ này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => { if (res.isConfirmed) { AppState.tasks = AppState.tasks.filter(t => t.id !== id); saveData(); renderTasks(); } }); }
+        function quickUpdateStatus(id, newStatus) { const t = AppState.tasks.find(x => x.id === id); if (t) { t.status = newStatus; saveData(); renderTasks(); } }
+        function quickComplete(id) { const t = AppState.tasks.find(x => x.id === id); if (t) { t.status = 'DONE'; saveData(); renderDashboard(); } }
 
-        function quickUpdateStatus(id, newStatus) {
-            const t = AppState.tasks.find(x => x.id === id);
-            if (t) { t.status = newStatus; saveData(); renderTasks(); }
-        }
-
-        function quickComplete(id) {
-            const t = AppState.tasks.find(x => x.id === id);
-            if (t) { t.status = 'DONE'; saveData(); renderDashboard(); }
-        }
-
-        // --- LỊCH CÔNG TÁC ---
+        // --- CALENDAR ---
         function openCalendarModal(eventId = null, defaultDate = '') {
-            populateDropdowns();
-            document.getElementById('calendar-event-form').reset();
-
+            populateDropdowns(); document.getElementById('calendar-event-form').reset();
             if (eventId) {
                 const ev = AppState.calendarEvents.find(x => x.id === eventId);
                 if (ev) {
@@ -1225,7 +774,7 @@
                     document.getElementById('cal-event-desc').value = ev.desc || '';
                 }
             } else {
-                document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch Công Tác Mới';
+                document.getElementById('calendarModalTitle').textContent = 'Thêm Lịch Công Tác';
                 document.getElementById('cal-event-id').value = '';
                 document.getElementById('cal-event-date').value = defaultDate ? defaultDate.split('T')[0] : new Date().toISOString().split('T')[0];
             }
@@ -1236,112 +785,53 @@
             const id = document.getElementById('cal-event-id').value;
             const title = document.getElementById('cal-event-title').value.trim();
             const dateVal = document.getElementById('cal-event-date').value;
-            if (!title || !dateVal) {
-                Swal.fire('Lỗi', 'Vui lòng nhập tên sự kiện và ngày diễn ra', 'error');
-                return;
-            }
-
-            const payload = {
-                title,
-                date: dateVal ? dateVal.split('T')[0] : '',
-                time: document.getElementById('cal-event-time').value.trim(),
-                location: document.getElementById('cal-event-location').value.trim(),
-                memberId: document.getElementById('cal-event-member').value,
-                desc: document.getElementById('cal-event-desc').value.trim()
-            };
-
-            if (id) {
-                const item = AppState.calendarEvents.find(x => x.id === id);
-                if (item) Object.assign(item, payload);
-            } else {
-                AppState.calendarEvents.push({ id: 'cal-' + Date.now(), ...payload });
-            }
-
-            saveData();
-            calendarModalObj.hide();
-            renderCalendar();
-            Swal.fire({ icon: 'success', title: 'Đã lưu lịch công tác!', timer: 1000, showConfirmButton: false });
+            if (!title || !dateVal) return;
+            const payload = { title, date: dateVal.split('T')[0], time: document.getElementById('cal-event-time').value.trim(), location: document.getElementById('cal-event-location').value.trim(), memberId: document.getElementById('cal-event-member').value, desc: document.getElementById('cal-event-desc').value.trim() };
+            if (id) { Object.assign(AppState.calendarEvents.find(x => x.id === id), payload); } else { AppState.calendarEvents.push({ id: 'cal-' + Date.now(), ...payload }); }
+            saveData(); calendarModalObj.hide(); renderCalendar();
         }
 
-        function deleteCalendarEvent(id) {
-            Swal.fire({ title: 'Xóa lịch công tác này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => {
-                if (res.isConfirmed) {
-                    AppState.calendarEvents = AppState.calendarEvents.filter(x => x.id !== id);
-                    saveData();
-                    renderCalendar();
-                }
-            });
-        }
-
-        function changeWeek(direction) {
-            calendarStartDate.setDate(calendarStartDate.getDate() + (direction * 7));
-            renderCalendar();
-        }
-
-        function resetCalendarToToday() {
-            calendarStartDate = new Date();
-            renderCalendar();
-        }
-
-        function jumpToSelectedDate(dateVal) {
-            if (!dateVal) return;
-            calendarStartDate = new Date(dateVal);
-            renderCalendar();
-        }
+        function deleteCalendarEvent(id) { Swal.fire({ title: 'Xóa lịch này?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(res => { if (res.isConfirmed) { AppState.calendarEvents = AppState.calendarEvents.filter(x => x.id !== id); saveData(); renderCalendar(); } }); }
+        function changeWeek(direction) { calendarStartDate.setDate(calendarStartDate.getDate() + (direction * 7)); renderCalendar(); }
+        function resetCalendarToToday() { calendarStartDate = new Date(); renderCalendar(); }
+        function jumpToSelectedDate(dateVal) { if (!dateVal) return; calendarStartDate = new Date(dateVal); renderCalendar(); }
 
         function renderCalendar() {
-            const grid = document.getElementById('weekly-calendar-grid');
-            grid.innerHTML = '';
-            
+            const grid = document.getElementById('weekly-calendar-grid'); grid.innerHTML = '';
             const curr = new Date(calendarStartDate);
-            const day = curr.getDay();
-            const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
+            const day = curr.getDay(); const diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
             const monday = new Date(curr.setDate(diff));
+            const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
             
-            const sunday = new Date(monday);
-            sunday.setDate(monday.getDate() + 6);
-            
-            document.getElementById('calendar-week-label').textContent = 
-                `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
-
+            document.getElementById('calendar-week-label').textContent = `Tuần từ ${monday.toLocaleDateString('vi-VN')} đến ${sunday.toLocaleDateString('vi-VN')}`;
             document.getElementById('calendar-jump-picker').value = monday.toISOString().split('T')[0];
-
             const todayStr = new Date().toISOString().split('T')[0];
             const dayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
 
             if(!AppState.calendarEvents) AppState.calendarEvents = [];
 
             for (let i = 0; i < 7; i++) {
-                const d = new Date(monday);
-                d.setDate(monday.getDate() + i);
+                const d = new Date(monday); d.setDate(monday.getDate() + i);
                 const dStr = d.toISOString().split('T')[0];
                 
                 const dayEvents = AppState.calendarEvents.filter(e => e.date && String(e.date).split('T')[0] === dStr);
                 const dayTasks = AppState.tasks.filter(t => t.deadline && String(t.deadline).split('T')[0] === dStr);
-                
                 const isToday = dStr === todayStr;
 
                 let htmlContent = '';
-
                 dayEvents.forEach(ev => {
                     const m = AppState.members.find(x => x.id === ev.memberId) || {name: 'Chưa phân công'};
                     htmlContent += `
                         <div class="calendar-event-card position-relative">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="badge bg-teal text-white" style="font-size: 9px;"><i class="fa-solid fa-clock me-1"></i>${ev.time || 'Cả ngày'}</span>
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                    <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;">
-                                        <li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li>
-                                        <li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li>
-                                    </ul>
-                                </div>
+                                <div class="dropdown"><button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-end" style="font-size: 11px;"><li><a class="dropdown-item" onclick="openCalendarModal('${ev.id}')"><i class="fa-solid fa-pen me-2"></i>Sửa lịch</a></li><li><a class="dropdown-item text-danger" onclick="deleteCalendarEvent('${ev.id}')"><i class="fa-solid fa-trash me-2"></i>Xóa lịch</a></li></ul></div>
                             </div>
                             <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${ev.title}</div>
                             ${ev.location ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-location-dot text-danger me-1"></i>${ev.location}</div>` : ''}
                             <div class="text-teal" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
-                        </div>
-                    `;
+                        </div>`;
                 });
 
                 dayTasks.forEach(t => {
@@ -1356,405 +846,108 @@
                             <div class="fw-bold text-dark mb-1" style="font-size: 12px;">${t.title}</div>
                             ${p.name ? `<div class="text-muted mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder me-1"></i>${p.name}</div>` : ''}
                             <div class="text-primary" style="font-size: 10px;"><i class="fa-solid fa-user me-1"></i>${m.name}</div>
-                        </div>
-                    `;
+                        </div>`;
                 });
 
-                if (!htmlContent) {
-                    htmlContent = `
-                        <div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;">
-                            <i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch
-                        </div>
-                    `;
-                }
+                if (!htmlContent) { htmlContent = `<div class="text-center text-muted my-auto py-5" style="font-size: 11px; opacity: 0.6;"><i class="fa-regular fa-calendar-plus mb-1 fs-4 d-block"></i>Không có lịch</div>`; }
 
                 grid.innerHTML += `
                     <div class="col-12 col-md">
                         <div class="calendar-day-col shadow-sm ${isToday ? 'border-teal border-2' : ''}">
                             <div class="calendar-day-header" style="${isToday ? 'background-color: var(--teal-primary); color: white; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;' : ''}">
-                                <div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div>
-                                <div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
+                                <div class="small text-uppercase fw-semibold" style="font-size: 0.75rem;">${dayNames[i]}</div><div class="fs-5 fw-bold">${d.getDate()}/${d.getMonth()+1}</div>
                             </div>
-                            <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">
-                                ${htmlContent}
-                            </div>
-                            <div class="p-2 border-top bg-light text-center">
-                                <button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')">
-                                    <i class="fa-solid fa-plus me-1"></i>Thêm lịch ngày này
-                                </button>
-                            </div>
+                            <div class="p-2 d-flex flex-column gap-2 flex-grow-1" style="max-height: 480px; overflow-y: auto;">${htmlContent}</div>
+                            <div class="p-2 border-top bg-light text-center"><button class="btn btn-sm btn-outline-teal w-100 py-1" style="font-size: 11px;" onclick="openCalendarModal(null, '${dStr}')"><i class="fa-solid fa-plus me-1"></i>Thêm lịch</button></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
-        // --- PROJECTS / EVENTS ---
+        // --- PROJECTS ---
         function renderProjects() {
             document.getElementById('projects-list-container').innerHTML = AppState.projects.map(p => {
                 const ts = AppState.tasks.filter(t => t.projectId === p.id);
-                const done = ts.filter(t => t.status === 'DONE').length;
-                const pct = ts.length ? Math.round((done / ts.length) * 100) : 0;
+                const done = ts.filter(t => t.status === 'DONE').length; const pct = ts.length ? Math.round((done / ts.length) * 100) : 0;
                 return `
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="card card-custom p-3 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center gap-2"><span class="p-2 rounded-circle" style="background:${p.color}"></span><h6 class="fw-bold m-0">${p.name}</h6></div>
-                                <div>
-                                    <button class="btn btn-sm btn-link text-muted" onclick="openProjectModal('${p.id}')"><i class="fa-solid fa-pen"></i></button>
-                                    <button class="btn btn-sm btn-link text-danger" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-                            ${p.attachment ? `<div class="mb-2"><a href="${p.attachment}" target="_blank" class="btn btn-sm btn-outline-teal w-100"><i class="fa-solid fa-file-arrow-down me-1"></i>Tài liệu / Giấy tờ kèm theo</a></div>` : '<small class="text-muted d-block mb-2">Chưa có giấy tờ đính kèm</small>'}
-                            <small class="text-muted d-block mb-1">Tiến độ hoàn thành: ${done}/${ts.length} (${pct}%)</small>
-                            <div class="progress mt-auto" style="height: 8px;"><div class="progress-bar" style="width: ${pct}%; background:${p.color}"></div></div>
+                    <div class="col-12 col-md-6 col-lg-4"><div class="card card-custom p-3 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2"><span class="p-2 rounded-circle" style="background:${p.color}"></span><h6 class="fw-bold m-0">${p.name}</h6></div>
+                            <div><button class="btn btn-sm btn-link text-muted" onclick="openProjectModal('${p.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-link text-danger" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button></div>
                         </div>
-                    </div>
-                `;
+                        ${p.attachment ? `<div class="mb-2"><a href="${p.attachment}" target="_blank" class="btn btn-sm btn-outline-teal w-100"><i class="fa-solid fa-file-arrow-down me-1"></i>Giấy tờ kèm theo</a></div>` : '<small class="text-muted d-block mb-2">Chưa có giấy tờ đính kèm</small>'}
+                        <small class="text-muted d-block mb-1">Hoàn thành: ${done}/${ts.length} (${pct}%)</small>
+                        <div class="progress mt-auto" style="height: 8px;"><div class="progress-bar" style="width: ${pct}%; background:${p.color}"></div></div>
+                    </div></div>`;
             }).join('');
         }
-
         function openProjectModal(id = null) {
             document.getElementById('project-form').reset();
-            if (id) {
-                const p = AppState.projects.find(x => x.id === id);
-                document.getElementById('projectModalTitle').textContent = 'Sửa Chương Trình';
-                document.getElementById('project-id').value = p.id;
-                document.getElementById('project-name').value = p.name;
-                document.getElementById('project-color').value = p.color;
-                document.getElementById('project-attachment').value = p.attachment || '';
-            } else {
-                document.getElementById('projectModalTitle').textContent = 'Tạo Chương Trình Mới';
-                document.getElementById('project-id').value = '';
-            }
+            if (id) { const p = AppState.projects.find(x => x.id === id); document.getElementById('projectModalTitle').textContent = 'Sửa Chương Trình'; document.getElementById('project-id').value = p.id; document.getElementById('project-name').value = p.name; document.getElementById('project-color').value = p.color; document.getElementById('project-attachment').value = p.attachment || ''; } else { document.getElementById('projectModalTitle').textContent = 'Tạo Mới'; document.getElementById('project-id').value = ''; }
             projectModalObj.show();
         }
-
         function saveProject() {
-            const id = document.getElementById('project-id').value;
-            const name = document.getElementById('project-name').value.trim();
-            const color = document.getElementById('project-color').value;
-            const attachment = document.getElementById('project-attachment').value.trim();
+            const id = document.getElementById('project-id').value; const name = document.getElementById('project-name').value.trim();
             if (!name) return;
-
-            if (id) {
-                const p = AppState.projects.find(x => x.id === id);
-                p.name = name; p.color = color; p.attachment = attachment;
-            } else {
-                AppState.projects.push({ id: 'proj-' + Date.now(), name, color, attachment });
-            }
+            const payload = { name, color: document.getElementById('project-color').value, attachment: document.getElementById('project-attachment').value.trim() };
+            if (id) { Object.assign(AppState.projects.find(x => x.id === id), payload); } else { AppState.projects.push({ id: 'proj-' + Date.now(), ...payload }); }
             saveData(); populateDropdowns(); projectModalObj.hide(); renderProjects();
         }
+        function deleteProject(id) { Swal.fire({ title: 'Xóa chương trình?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => { if (r.isConfirmed) { AppState.projects = AppState.projects.filter(p => p.id !== id); AppState.tasks = AppState.tasks.filter(t => t.projectId !== id); AppState.reports = AppState.reports.filter(r => r.projectId !== id); saveData(); populateDropdowns(); renderProjects(); } }); }
 
-        function deleteProject(id) {
-            Swal.fire({ title: 'Xóa chương trình?', text: 'Mọi nhiệm vụ và báo cáo liên quan cũng sẽ bị xóa!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => {
-                if (r.isConfirmed) {
-                    AppState.projects = AppState.projects.filter(p => p.id !== id);
-                    AppState.tasks = AppState.tasks.filter(t => t.projectId !== id);
-                    AppState.reports = AppState.reports.filter(r => r.projectId !== id);
-                    saveData(); populateDropdowns(); renderProjects();
-                }
-            });
-        }
-
-        // --- MEMBERS ---
+        // --- MEMBERS & REPORTS & EXPORT ---
         function renderMembers() {
             document.getElementById('members-table-body').innerHTML = AppState.members.map(m => {
-                const assignedTasks = AppState.tasks.filter(t => t.memberId === m.id);
-                const doneTasks = assignedTasks.filter(t => t.status === 'DONE').length;
-                return `
-                    <tr>
-                        <td class="fw-semibold"><i class="fa-solid fa-user-graduate text-teal me-2"></i>${m.name}</td>
-                        <td><span class="badge bg-light text-dark border">${m.role || 'Đoàn viên'}</span></td>
-                        <td>${m.phone || 'Chưa cập nhật'}</td>
-                        <td><a href="mailto:${m.email}" class="text-decoration-none"><i class="fa-solid fa-envelope me-1"></i>${m.email}</a></td>
-                        <td><span class="badge bg-primary">${assignedTasks.length} nhiệm vụ</span> (${doneTasks} đã xong)</td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-teal me-1" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-pen"></i></button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteMember('${m.id}')"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+                const as = AppState.tasks.filter(t => t.memberId === m.id); const ds = as.filter(t => t.status === 'DONE').length;
+                return `<tr><td class="fw-semibold"><i class="fa-solid fa-user-graduate text-teal me-2"></i>${m.name}</td><td><span class="badge bg-light text-dark border">${m.role || 'Đoàn viên'}</span></td><td>${m.phone || 'N/A'}</td><td><a href="mailto:${m.email}" class="text-decoration-none">${m.email}</a></td><td><span class="badge bg-primary">${as.length} nhiệm vụ</span></td><td class="text-end"><button class="btn btn-sm btn-outline-teal me-1" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteMember('${m.id}')"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             }).join('');
         }
+        function openMemberModal(id = null) { document.getElementById('member-form').reset(); if (id) { const m = AppState.members.find(x => x.id === id); document.getElementById('memberModalTitle').textContent = 'Sửa Đoàn Viên'; document.getElementById('member-id').value = m.id; document.getElementById('member-name').value = m.name; document.getElementById('member-role').value = m.role || ''; document.getElementById('member-phone').value = m.phone || ''; document.getElementById('member-email').value = m.email || ''; } else { document.getElementById('memberModalTitle').textContent = 'Thêm Đoàn Viên'; document.getElementById('member-id').value = ''; } memberModalObj.show(); }
+        function saveMember() { const id = document.getElementById('member-id').value; const name = document.getElementById('member-name').value.trim(); const email = document.getElementById('member-email').value.trim(); if (!name || !email) return; const payload = { name, role: document.getElementById('member-role').value.trim(), phone: document.getElementById('member-phone').value.trim(), email }; if (id) { Object.assign(AppState.members.find(x => x.id === id), payload); } else { AppState.members.push({ id: 'mem-' + Date.now(), ...payload }); } saveData(); populateDropdowns(); memberModalObj.hide(); renderMembers(); }
+        function deleteMember(id) { Swal.fire({ title: 'Xóa đoàn viên?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => { if (r.isConfirmed) { AppState.members = AppState.members.filter(m => m.id !== id); AppState.tasks.forEach(t => { if (t.memberId === id) t.memberId = null; }); saveData(); populateDropdowns(); renderMembers(); } }); }
+        function renderReports() { document.getElementById('reports-list-container').innerHTML = AppState.reports.map(r => { const p = AppState.projects.find(x => x.id === r.projectId) || {name: ''}; return `<div class="col-12"><div class="card card-custom p-4"><div class="d-flex justify-content-between align-items-center mb-2"><h6 class="fw-bold m-0 text-teal"><i class="fa-solid fa-flag me-2"></i>Chương trình: ${p.name}</h6><div><span class="badge bg-success me-2">Xếp loại: ${r.rating}</span><button class="btn btn-sm btn-outline-danger" onclick="deleteReport('${r.id}')"><i class="fa-solid fa-trash"></i></button></div></div><p class="text-secondary mb-2"><strong>Nhận xét:</strong> ${r.content}</p><small class="text-muted"><i class="fa-solid fa-calendar me-1"></i>Ngày đánh giá: ${r.date}</small></div></div>`; }).join('') || '<div class="col-12 text-center text-muted py-4">Chưa có bản nhận xét nào.</div>'; }
+        function openReportModal() { populateDropdowns(); document.getElementById('report-form').reset(); document.getElementById('report-id').value = ''; reportModalObj.show(); }
+        function saveReport() { const content = document.getElementById('report-content').value.trim(); if (!content) return; AppState.reports.unshift({ id: 'rep-' + Date.now(), projectId: document.getElementById('report-project').value, rating: document.getElementById('report-rating').value, content, date: new Date().toISOString().split('T')[0] }); saveData(); reportModalObj.hide(); renderReports(); }
+        function deleteReport(id) { AppState.reports = AppState.reports.filter(r => r.id !== id); saveData(); renderReports(); }
 
-        function openMemberModal(id = null) {
-            document.getElementById('member-form').reset();
-            if (id) {
-                const m = AppState.members.find(x => x.id === id);
-                document.getElementById('memberModalTitle').textContent = 'Sửa Thông Tin Đoàn Viên';
-                document.getElementById('member-id').value = m.id;
-                document.getElementById('member-name').value = m.name;
-                document.getElementById('member-role').value = m.role || '';
-                document.getElementById('member-phone').value = m.phone || '';
-                document.getElementById('member-email').value = m.email || '';
-            } else {
-                document.getElementById('memberModalTitle').textContent = 'Thêm Đoàn Viên';
-                document.getElementById('member-id').value = '';
-            }
-            memberModalObj.show();
-        }
-
-        function saveMember() {
-            const id = document.getElementById('member-id').value;
-            const name = document.getElementById('member-name').value.trim();
-            const role = document.getElementById('member-role').value.trim();
-            const phone = document.getElementById('member-phone').value.trim();
-            const email = document.getElementById('member-email').value.trim();
-            if (!name || !email) { Swal.fire('Lỗi', 'Vui lòng điền Họ tên và Gmail đoàn viên', 'error'); return; }
-
-            if (id) {
-                const m = AppState.members.find(x => x.id === id);
-                m.name = name; m.role = role; m.phone = phone; m.email = email;
-            } else {
-                AppState.members.push({ id: 'mem-' + Date.now(), name, role, phone, email });
-            }
-            saveData(); populateDropdowns(); memberModalObj.hide(); renderMembers();
-        }
-
-        function deleteMember(id) {
-            Swal.fire({ title: 'Xóa đoàn viên?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc2626' }).then(r => {
-                if (r.isConfirmed) {
-                    AppState.members = AppState.members.filter(m => m.id !== id);
-                    AppState.tasks.forEach(t => { if (t.memberId === id) t.memberId = null; });
-                    saveData(); populateDropdowns(); renderMembers();
-                }
-            });
-        }
-
-        // --- REPORTS ---
-        function renderReports() {
-            document.getElementById('reports-list-container').innerHTML = AppState.reports.map(r => {
-                const p = AppState.projects.find(x => x.id === r.projectId) || {name: 'Chương trình'};
-                return `
-                    <div class="col-12">
-                        <div class="card card-custom p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="fw-bold m-0 text-teal"><i class="fa-solid fa-flag me-2"></i>Chương trình: ${p.name}</h6>
-                                <div>
-                                    <span class="badge bg-success me-2">Xếp loại: ${r.rating}</span>
-                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteReport('${r.id}')"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-                            <p class="text-secondary mb-2"><strong>Nhận xét:</strong> ${r.content}</p>
-                            <small class="text-muted"><i class="fa-solid fa-calendar me-1"></i>Ngày đánh giá: ${r.date}</small>
-                        </div>
-                    </div>
-                `;
-            }).join('') || '<div class="col-12 text-center text-muted py-4">Chưa có bản nhận xét nào được lập.</div>';
-        }
-
-        function openReportModal() {
-            populateDropdowns();
-            document.getElementById('report-form').reset();
-            document.getElementById('report-id').value = '';
-            reportModalObj.show();
-        }
-
-        function saveReport() {
-            const projectId = document.getElementById('report-project').value;
-            const rating = document.getElementById('report-rating').value;
-            const content = document.getElementById('report-content').value.trim();
-            if (!content) return;
-
-            AppState.reports.unshift({
-                id: 'rep-' + Date.now(), projectId, rating, content, date: new Date().toISOString().split('T')[0]
-            });
-            saveData(); reportModalObj.hide(); renderReports();
-        }
-
-        function deleteReport(id) {
-            AppState.reports = AppState.reports.filter(r => r.id !== id);
-            saveData(); renderReports();
-        }
-
-        // --- EXPORT WORD DOC ---
         function exportToWordDoc() {
-            const u = AppState.user;
-            let htmlContent = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>Báo Cáo Công Tác Đoàn</title>
-                <style>
-                    body { font-family: 'Times New Roman', Times, serif; font-size: 14pt; line-height: 1.5; color: #000; margin: 2cm; }
-                    .header { text-align: center; font-weight: bold; margin-bottom: 20px; }
-                    .title { text-align: center; font-weight: bold; font-size: 16pt; margin: 20px 0; text-transform: uppercase; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
-                    th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 13pt; }
-                    th { background-color: #f2f2f2; text-align: center; }
-                    .section-title { font-weight: bold; font-size: 14pt; margin-top: 20px; text-decoration: underline; }
-                </style>
-                </head>
-                <body>
-                    <div class="header">
-                        ĐOÀN TNCS HỒ CHÍ MINH<br>
-                        <strong>ĐTN THPT NGUYỄN VĂN CHẤT</strong>
-                        <hr style="width: 200px; margin: 5px auto;">
-                    </div>
-                    <div class="title">BÁO CÁO TỔNG HỢP CÔNG TÁC ĐOÀN VÀ PHONG TRÀO THANH NIÊN</div>
-                    <p><strong>Cán bộ báo cáo:</strong> ${u.name}</p>
-                    <p><strong>Đơn vị:</strong> ${u.title} - THPT Nguyễn Văn Chất</p>
-                    <p><strong>Ngày lập báo cáo:</strong> ${new Date().toLocaleDateString('vi-VN')}</p>
-                    
-                    <div class="section-title">I. DANH SÁCH NHIỆM VỤ & PHÂN CÔNG ĐOÀN VIÊN</div>
-                    <table>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên Nhiệm Vụ</th>
-                            <th>Chương Trình</th>
-                            <th>Đoàn Viên Phụ Trách (Gmail)</th>
-                            <th>Trạng Thái</th>
-                            <th>Hạn Chót</th>
-                        </tr>
-            `;
-
-            AppState.tasks.forEach((t, index) => {
-                const p = AppState.projects.find(x => x.id === t.projectId) || {name: ''};
-                const m = AppState.members.find(x => x.id === t.memberId) || {name: 'Chưa phân công', email: ''};
-                htmlContent += `
-                    <tr>
-                        <td style="text-align: center;">${index + 1}</td>
-                        <td>${t.title}</td>
-                        <td>${p.name}</td>
-                        <td>${m.name} (${m.email})</td>
-                        <td style="text-align: center;">${getStatusLabel(t.status)}</td>
-                        <td style="text-align: center;">${t.deadline ? String(t.deadline).split('T')[0] : ''}</td>
-                    </tr>
-                `;
-            });
-
-            htmlContent += `
-                    </table>
-                    <div class="section-title">II. ĐÁNH GIÁ & NHẬN XÉT CÁC CHƯƠNG TRÌNH</div>
-            `;
-
-            AppState.reports.forEach((r, index) => {
-                const p = AppState.projects.find(x => x.id === r.projectId) || {name: 'Chương trình'};
-                htmlContent += `
-                    <p><strong>${index + 1}. Chương trình: ${p.name} (Xếp loại: ${r.rating})</strong><br><em>Nhận xét:</em> ${r.content}</p>
-                `;
-            });
-
-            htmlContent += `
-                    <br><br>
-                    <table style="border: none; margin-top: 40px;">
-                        <tr style="border: none;">
-                            <td style="border: none; text-align: center; width: 50%;"><strong>TM. BAN CHẤP HÀNH</strong><br><br><br><br><strong>${u.name}</strong></td>
-                            <td style="border: none; text-align: center; width: 50%;"><strong>NGƯỜI LẬP BÁO CÁO</strong><br><br><br><br><strong>${u.name}</strong></td>
-                        </tr>
-                    </table>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Bao_Cao_Doan_THPT_Nguyen_Van_Chat_${new Date().toISOString().split('T')[0]}.doc`;
-            a.click();
+            let ht = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Báo Cáo</title><style>body { font-family: 'Times New Roman', Times, serif; font-size: 14pt; line-height: 1.5; color: #000; margin: 2cm; } .header { text-align: center; font-weight: bold; margin-bottom: 20px; } .title { text-align: center; font-weight: bold; font-size: 16pt; margin: 20px 0; text-transform: uppercase; } table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; } th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 13pt; } th { background-color: #f2f2f2; text-align: center; } .section-title { font-weight: bold; font-size: 14pt; margin-top: 20px; text-decoration: underline; }</style></head><body><div class="header">ĐOÀN TNCS HỒ CHÍ MINH<br><strong>ĐTN THPT NGUYỄN VĂN CHẤT</strong><hr style="width: 200px; margin: 5px auto;"></div><div class="title">BÁO CÁO TỔNG HỢP CÔNG TÁC ĐOÀN VÀ PHONG TRÀO THANH NIÊN</div><p><strong>Cán bộ báo cáo:</strong> ${AppState.user.name}</p><p><strong>Ngày lập báo cáo:</strong> ${new Date().toLocaleDateString('vi-VN')}</p><div class="section-title">I. DANH SÁCH NHIỆM VỤ</div><table><tr><th>STT</th><th>Tên Nhiệm Vụ</th><th>Đoàn Viên (Gmail)</th><th>Trạng Thái</th><th>Hạn Chót</th></tr>`;
+            AppState.tasks.forEach((t, i) => { const m = AppState.members.find(x => x.id === t.memberId) || {name: '', email: ''}; ht += `<tr><td style="text-align: center;">${i + 1}</td><td>${t.title}</td><td>${m.name} (${m.email})</td><td style="text-align: center;">${getStatusLabel(t.status)}</td><td style="text-align: center;">${t.deadline ? String(t.deadline).split('T')[0] : ''}</td></tr>`; });
+            ht += `</table><div class="section-title">II. ĐÁNH GIÁ CHƯƠNG TRÌNH</div>`;
+            AppState.reports.forEach((r, i) => { const p = AppState.projects.find(x => x.id === r.projectId) || {name: ''}; ht += `<p><strong>${i + 1}. ${p.name} (Xếp loại: ${r.rating})</strong><br><em>Nhận xét:</em> ${r.content}</p>`; });
+            ht += `<table style="border: none; margin-top: 40px;"><tr style="border: none;"><td style="border: none; text-align: center; width: 50%;"><strong>TM. BAN CHẤP HÀNH</strong><br><br><br><br><strong>${AppState.user.name}</strong></td><td style="border: none; text-align: center; width: 50%;"><strong>NGƯỜI LẬP BÁO CÁO</strong><br><br><br><br><strong>${AppState.user.name}</strong></td></tr></table></body></html>`;
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + ht], { type: 'application/msword' })); a.download = `Bao_Cao_Doan_${new Date().toISOString().split('T')[0]}.doc`; a.click();
         }
 
         function exportToExcel() {
-            const data = AppState.tasks.map(t => ({
-                'Tên Nhiệm Vụ': t.title,
-                'Chương Trình': (AppState.projects.find(p => p.id === t.projectId) || {}).name || '',
-                'Đoàn Viên Phụ Trách': (AppState.members.find(m => m.id === t.memberId) || {}).name || '',
-                'Gmail Phụ Trách': (AppState.members.find(m => m.id === t.memberId) || {}).email || '',
-                'Mức Độ': getPriorityLabel(t.priority),
-                'Trạng Thái': getStatusLabel(t.status),
-                'Deadline': t.deadline ? String(t.deadline).split('T')[0] : '',
-                'Tài Liệu Đính Kèm': t.attachment || '',
-                'Ghi Chú': t.desc || ''
-            }));
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "NhiemVuDoan");
-            XLSX.writeFile(wb, "DTN_THPT_NguyenVanChat_ThongKe.xlsx");
+            const data = AppState.tasks.map(t => ({ 'Tên Nhiệm Vụ': t.title, 'Chương Trình': (AppState.projects.find(p => p.id === t.projectId) || {}).name || '', 'Đoàn Viên Phụ Trách': (AppState.members.find(m => m.id === t.memberId) || {}).name || '', 'Mức Độ': getPriorityLabel(t.priority), 'Trạng Thái': getStatusLabel(t.status), 'Deadline': t.deadline ? String(t.deadline).split('T')[0] : '' }));
+            const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "NhiemVuDoan"); XLSX.writeFile(wb, "ThongKe.xlsx");
         }
 
-        // --- AVATAR UPLOAD ---
-        function handleAvatarUpload(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                AppState.user.avatar = evt.target.result;
-                document.getElementById('settings-avatar-preview').src = AppState.user.avatar;
-                updateUserProfileUI();
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // --- HELPERS ---
-        function updateUserProfileUI() {
-            document.getElementById('topbar-unit-name').textContent = AppState.user.title;
-            if(AppState.user.avatar) {
-                document.getElementById('topbar-avatar').src = AppState.user.avatar;
-                document.getElementById('settings-avatar-preview').src = AppState.user.avatar;
-            }
-            document.getElementById('setting-user-name').value = AppState.user.name;
-            document.getElementById('setting-user-title').value = AppState.user.title;
-        }
-
-        function saveUserSettings(e) {
-            e.preventDefault();
-            const gasUrl = document.getElementById('setting-gas-url').value.trim();
-            localStorage.setItem('TealYouth_GAS_URL', gasUrl);
-
-            AppState.user.name = document.getElementById('setting-user-name').value;
-            AppState.user.title = document.getElementById('setting-user-title').value;
-            saveData(); 
-            updateUserProfileUI(); 
-            Swal.fire('Thành công', 'Đã lưu cài đặt và đồng bộ lên Google Sheets!', 'success');
-        }
-
+        function handleAvatarUpload(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(evt) { AppState.user.avatar = evt.target.result; document.getElementById('settings-avatar-preview').src = AppState.user.avatar; updateUserProfileUI(); }; reader.readAsDataURL(file); }
+        function updateUserProfileUI() { document.getElementById('topbar-unit-name').textContent = AppState.user.title; if(AppState.user.avatar) { document.getElementById('topbar-avatar').src = AppState.user.avatar; document.getElementById('settings-avatar-preview').src = AppState.user.avatar; } document.getElementById('setting-user-name').value = AppState.user.name; document.getElementById('setting-user-title').value = AppState.user.title; }
+        
+        function saveUserSettings(e) { e.preventDefault(); const gasUrl = document.getElementById('setting-gas-url').value.trim(); localStorage.setItem('TealYouth_GAS_URL', gasUrl); AppState.user.name = document.getElementById('setting-user-name').value; AppState.user.title = document.getElementById('setting-user-title').value; saveData(); updateUserProfileUI(); Swal.fire('Thành công', 'Đã lưu cấu hình!', 'success'); }
+        
         function populateDropdowns() {
             const projOpts = AppState.projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            const memOpts = `<option value="">-- Chọn đoàn viên phụ trách từ CSDL --</option>` + AppState.members.map(m => `<option value="${m.id}">${m.name} - ${m.role || 'Đoàn viên'} (${m.email})</option>`).join('');
-
-            document.getElementById('task-project').innerHTML = projOpts;
-            document.getElementById('task-member').innerHTML = memOpts;
-            document.getElementById('report-project').innerHTML = projOpts;
-            document.getElementById('cal-event-member').innerHTML = memOpts;
+            const memOpts = `<option value="">-- Chọn đoàn viên phụ trách --</option>` + AppState.members.map(m => `<option value="${m.id}">${m.name} (${m.email})</option>`).join('');
+            document.getElementById('task-project').innerHTML = projOpts; document.getElementById('task-member').innerHTML = memOpts; document.getElementById('report-project').innerHTML = projOpts; document.getElementById('cal-event-member').innerHTML = memOpts;
         }
 
         function filterByPeriod(tasks) {
-            if (quickPeriodFilter === 'ALL') return tasks;
-            const now = new Date();
-            return tasks.filter(t => {
-                if (!t.deadline) return false;
-                const d = new Date(t.deadline);
-                if (quickPeriodFilter === 'WEEK') {
-                    const firstDay = new Date(now.setDate(now.getDate() - now.getDay()));
-                    const lastDay = new Date(now.setDate(now.getDate() + 6));
-                    return d >= firstDay && d <= lastDay;
-                }
-                if (quickPeriodFilter === 'MONTH') {
-                    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-                }
-                if (quickPeriodFilter === 'SEMESTER') {
-                    const curMonth = now.getMonth() + 1;
-                    const semMatch = curMonth <= 6 ? (d.getMonth() + 1 <= 6) : (d.getMonth() + 1 > 6);
-                    return semMatch && d.getFullYear() === now.getFullYear();
-                }
-                return true;
+            if (quickPeriodFilter === 'ALL') return tasks; const now = new Date();
+            return tasks.filter(t => { if (!t.deadline) return false; const d = new Date(t.deadline);
+                if (quickPeriodFilter === 'WEEK') { const firstDay = new Date(now.setDate(now.getDate() - now.getDay())); const lastDay = new Date(now.setDate(now.getDate() + 6)); return d >= firstDay && d <= lastDay; }
+                if (quickPeriodFilter === 'MONTH') { return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); }
+                if (quickPeriodFilter === 'SEMESTER') { const semMatch = (now.getMonth() + 1) <= 6 ? (d.getMonth() + 1 <= 6) : (d.getMonth() + 1 > 6); return semMatch && d.getFullYear() === now.getFullYear(); } return true;
             });
         }
 
-        function isOverdue(t) { 
-            if (!t.deadline || t.status === 'DONE') return false;
-            return String(t.deadline).split('T')[0] < new Date().toISOString().split('T')[0]; 
-        }
+        function isOverdue(t) { if (!t.deadline || t.status === 'DONE') return false; return String(t.deadline).split('T')[0] < new Date().toISOString().split('T')[0]; }
         function getPriorityLabel(p) { return { Urgent: 'Đặc biệt gấp', High: 'Quan trọng', Medium: 'Thường xuyên', Low: 'Thông tin' }[p] || p; }
         function getStatusLabel(s) { return { TODO: 'Cần làm', IN_PROGRESS: 'Đang làm', REVIEW: 'Nghiệm thu', DONE: 'Hoàn thành' }[s] || s; }
-        function getStatusBadge(s) {
-            return {
-                TODO: '<span class="badge bg-secondary">Cần làm</span>',
-                IN_PROGRESS: '<span class="badge bg-primary">Đang làm</span>',
-                REVIEW: '<span class="badge bg-warning text-dark">Nghiệm thu</span>',
-                DONE: '<span class="badge bg-success">Hoàn thành</span>'
-            }[s] || s;
-        }
+        function getStatusBadge(s) { return { TODO: '<span class="badge bg-secondary">Cần làm</span>', IN_PROGRESS: '<span class="badge bg-primary">Đang làm</span>', REVIEW: '<span class="badge bg-warning text-dark">Nghiệm thu</span>', DONE: '<span class="badge bg-success">Hoàn thành</span>' }[s] || s; }
     </script>
 </body>
 </html>
